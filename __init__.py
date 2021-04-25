@@ -331,6 +331,8 @@ class Addons_Helper_Pickle(Operator):
 @persistent
 def load_handler(dummy):
 
+    print(11111111111111111111)
+
     try:
         bpy.ops.addons_helper.pickle(action = "IMPORT")
     except RuntimeError:
