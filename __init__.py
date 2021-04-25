@@ -12,7 +12,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 bl_info = {
-    "name" : "Addons Helper",
+    "name" : "Add-ons Grouper",
     "author" : "Rovh",
     "description" : "",
     "blender" : (3, 0, 0),
