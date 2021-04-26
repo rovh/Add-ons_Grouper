@@ -466,7 +466,8 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
 
 
             rows = 2
-            main_column.template_list("ADDONS_LIST_UL_items", "", scene, "addons_list", scene, "addons_list_index", rows=rows)
+            wm = context.window_manager
+            main_column.template_list("ADDONS_LIST_UL_items", "", scene, "addons_list", wm, "addons_list_index", rows=rows)
 
             first_column.separator(factor = 9)
 

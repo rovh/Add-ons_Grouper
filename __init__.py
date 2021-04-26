@@ -331,7 +331,7 @@ class Addons_Helper_Pickle(Operator):
 @persistent
 def load_handler(dummy):
 
-    print(11111111111111111111)
+    # print(11111111111111111111) 
 
     try:
         bpy.ops.addons_helper.pickle(action = "IMPORT")
@@ -380,7 +380,7 @@ def register():
     bpy.types.Scene.addons_helper_list_index = IntProperty()
 
     bpy.types.Scene.addons_list = CollectionProperty(type=Addons_List_Collection)
-    bpy.types.Scene.addons_list_index = IntProperty()
+    bpy.types.WindowManager.addons_list_index = IntProperty()
 
     # bpy.ops.addons_helper.pickle('IMPORT', "INVOKE_DEFAULT")
     # bpy.ops.addons_helper.pickle("INVOKE_DEFAULT")
@@ -412,7 +412,7 @@ def unregister():
     del bpy.types.Scene.addons_helper_list_index
 
     del bpy.types.Scene.addons_list
-    del bpy.types.Scene.addons_list_index
+    del bpy.types.WindowManager.addons_list_index
 
     
 

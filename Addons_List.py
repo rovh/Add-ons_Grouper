@@ -78,20 +78,22 @@ class Addons_List_actions(Operator):
     def invoke(self, context, event):
 
         scene = context.scene
-        idx = scene.addons_list_index
+        # idx = scene.addons_list_index
+        wm = context.window_manager
+        idx = wm.addons_list_index
 
         try:
-            item = scene.addons_list[idx]
+            item = wm.addons_list[idx]
         except IndexError:
             pass
         else:
             if self.action == 'DOWN' and idx < len(scene.addons_list) - 1:
                 scene.addons_list.move(idx, idx+1)
-                scene.addons_list_index += 1
+                wm.addons_list_index += 1
 
             elif self.action == 'UP' and idx >= 1:
                 scene.addons_list.move(idx, idx-1)
-                scene.addons_list_index -= 1
+                wm.addons_list_index -= 1
                 
 
         return {"FINISHED"}
@@ -112,6 +114,7 @@ class Addons_List_list_move(Operator):
         count = 0
 
         scene = context.scene
+        wm = context.window_manager
 
         scene.addons_helper_list_index = self.group_index
 
@@ -130,7 +133,7 @@ class Addons_List_list_move(Operator):
                 if self.index_from_add_action:
                     count = count + 1
 
-            scene.addons_list_index = count
+            wm.addons_list_index = count
 
 
 
@@ -160,7 +163,9 @@ class Addons_List_actions_add(Operator):
     def execute(self, context):
 
         scene = context.scene
-        idx = scene.addons_list_index
+        wm = context.window_manager
+        # idx = scene.addons_list_index
+        idx = wm.addons_list_index
 
         try:
             item = scene.addons_list[idx]
@@ -198,8 +203,10 @@ class Addons_List_actions_remove(Operator):
 
     def invoke(self, context, event):
 
-        idx = context.scene.addons_list_index
-        if context.scene.addons_list[idx].index_from_group == self.group_index:
+        wm = context.window_manager
+        # idx = context.scene.addons_list_index
+        idx = wm.addons_list_index
+        if wm.addons_list[idx].index_from_group == self.group_index:
             return context.window_manager.invoke_confirm(self, event)
         else:
             return {"FINISHED"}  
@@ -209,12 +216,13 @@ class Addons_List_actions_remove(Operator):
     def execute(self, context):
 
         scene = context.scene
-        idx = scene.addons_list_index
+        wm = context.window_manager
+        idx = wm.addons_list_index
         
         if idx == 0:
-            scene.addons_list_index = 0
+            wm.addons_list_index = 0
         else:
-            scene.addons_list_index -= 1
+            wm.addons_list_index -= 1
         
         scene.addons_list.remove(idx)
 
@@ -233,7 +241,8 @@ class Addons_List_find(Operator):
     
 
         scene = context.scene
-        idx = scene.addons_list_index
+        wm = context.window_manager
+        idx = wm.addons_list_index
 
         try:
             item = scene.addons_list[idx]
@@ -254,6 +263,7 @@ class ADDONS_LIST_UL_items(UIList):
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
 
         scene = context.scene
+        wm = context.window_manager
 
         try:
             item = scene.addons_list[index]
@@ -307,7 +317,7 @@ class ADDONS_LIST_UL_items(UIList):
                 
 
 
-                if index == scene.addons_list_index:
+                if index == wm.addons_list_index:
                         ico = "TRIA_RIGHT"
                 else:
                         ico = "NONE"
@@ -373,7 +383,7 @@ class ADDONS_LIST_UL_items(UIList):
                 row = main_row.row(align = 1)
                 row.prop(item, "text", emboss=1, text = "")
 
-                if index == scene.addons_list_index:
+                if index == wm.addons_list_index:
                         row.label(icon = "TRIA_LEFT", text = "")
 
 
