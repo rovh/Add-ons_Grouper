@@ -16,10 +16,12 @@ bl_info = {
     "author" : "Rovh",
     "description" : "",
     "blender" : (3, 0, 0),
-    "version" : (0, 0, 1),
+    "version" : (1,0),
     "location" : "",
     "warning" : "",
-    "category" : ".Add-ons"
+    "category" : ".Add-ons",
+    "wiki_url": "https://github.com/rovh/Add-ons_Grouper",
+    "tracker_url": "https://github.com/rovh/Add-ons_Grouper/issues",
 }
 
 
@@ -51,9 +53,9 @@ class Addons_Helper_Preferences (AddonPreferences):
 
     # preferences = bpy.context.preferences.addons[__name__].preferences
 
-    # bpy.context.preferences.addons[__name__].addons_helper_list = CollectionProperty(type=Notes_List_Collection)
+    # bpy.context.preferences.addons[__name__].addons_groups_list = CollectionProperty(type=Notes_List_Collection)
 
-    # addons_helper_list: CollectionProperty(type=Notes_List_Collection)
+    # addons_groups_list: CollectionProperty(type=Notes_List_Collection)
 
     # t: IntProperty()
 
@@ -64,23 +66,24 @@ class Addons_Helper_Preferences (AddonPreferences):
             
         layout = self.layout
         scene = bpy.context.scene
+        wm = context.window_manager
 
         rows = 2
         row = layout.row()
-        row.template_list("ADDONS_GROUPER_LIST_UL_items", "", scene, "addons_helper_list", scene, "addons_helper_list_index", rows=rows)
+        row.template_list("ADDONS_GROUPER_LIST_UL_items", "", scene, "addons_groups_list", wm, "addons_groups_list_index", rows=rows)
 
         col = row.column(align=True)
         col.scale_x = 1.1
         col.scale_y = 1.2
 
-        col.operator("addons_helper_list.list_action_add", icon='ADD', text="")
-        col.operator("addons_helper_list.list_action_remove", icon='REMOVE', text="")
-        # col.operator("addons_helper_list.list_action", icon='REMOVE', text="").action = 'REMOVE'
+        col.operator("addons_groups_list.list_action_add", icon='ADD', text="")
+        col.operator("addons_groups_list.list_action_remove", icon='REMOVE', text="")
+        # col.operator("addons_groups_list.list_action", icon='REMOVE', text="").action = 'REMOVE'
         
         col.separator(factor = 0.4)
 
-        col.operator("addons_helper_list.list_action", icon='TRIA_UP', text="").action = 'UP'
-        col.operator("addons_helper_list.list_action", icon='TRIA_DOWN', text="").action = 'DOWN'
+        col.operator("addons_groups_list.list_action", icon='TRIA_UP', text="").action = 'UP'
+        col.operator("addons_groups_list.list_action", icon='TRIA_DOWN', text="").action = 'DOWN'
 
         # col.separator(factor = 0.4)
 
@@ -95,7 +98,7 @@ class Addons_Helper_Preferences (AddonPreferences):
 
         
 
-        col.operator("addons_helper_list.clear_list", icon="TRASH", text = "")
+        col.operator("addons_groups_list.clear_list", icon="TRASH", text = "")
         # row = layout.row()
         # col = row.column(align=True)
         # row = col.row(align=True)
@@ -235,12 +238,12 @@ class Addons_Helper_Pickle(Operator):
                 data = pickle.load(f)
 
             length_data = len(data)
-            length_addons_helper_list = len(context.scene.addons_helper_list)
+            length_addons_helper_list = len(context.scene.addons_groups_list)
 
             if length_data > length_addons_helper_list:
                 length = length_data - length_addons_helper_list
                 for _ in range(length):
-                    context.scene.addons_helper_list.add()
+                    context.scene.addons_groups_list.add()
                 
 
             for index, element in enumerate(data):
@@ -250,7 +253,7 @@ class Addons_Helper_Pickle(Operator):
                     name = i[0]
                     value = i[1]
 
-                    bpy.context.scene.addons_helper_list[index][name] = value
+                    bpy.context.scene.addons_groups_list[index][name] = value
 
                     # print(name, value)
 
@@ -286,7 +289,7 @@ class Addons_Helper_Pickle(Operator):
 
 
             data = []
-            for i in bpy.context.scene.addons_helper_list:
+            for i in bpy.context.scene.addons_groups_list:
                 data.append( i.items() )
 
             with open('saved_data_Addons_Groups_List.pickle', 'wb') as f:
@@ -370,14 +373,11 @@ blender_classes = \
 
 def register():
 
-    bpy.types.Scene.splash_screen = BoolProperty()
-
     for blender_class in blender_classes:
         bpy.utils.register_class(blender_class)
 
-
-    bpy.types.Scene.addons_helper_list = CollectionProperty(type=Notes_List_Collection)
-    bpy.types.Scene.addons_helper_list_index = IntProperty()
+    bpy.types.Scene.addons_groups_list = CollectionProperty(type=Notes_List_Collection)
+    bpy.types.WindowManager.addons_groups_list_index = IntProperty()
 
     bpy.types.Scene.addons_list = CollectionProperty(type=Addons_List_Collection)
     bpy.types.WindowManager.addons_list_index = IntProperty()
@@ -406,10 +406,8 @@ def unregister():
     for blender_class in blender_classes:
         bpy.utils.unregister_class(blender_class)
 
-    del bpy.types.Scene.splash_screen
-
-    del bpy.types.Scene.addons_helper_list
-    del bpy.types.Scene.addons_helper_list_index
+    del bpy.types.Scene.addons_groups_list
+    del bpy.types.WindowManager.addons_groups_list_index
 
     del bpy.types.Scene.addons_list
     del bpy.types.WindowManager.addons_list_index

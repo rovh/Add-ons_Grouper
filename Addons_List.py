@@ -116,7 +116,7 @@ class Addons_List_list_move(Operator):
         scene = context.scene
         wm = context.window_manager
 
-        scene.addons_helper_list_index = self.group_index
+        wm.addons_groups_list_index = self.group_index
 
         for index, element in enumerate(scene.addons_list):
             if element.index_from_group != self.group_index:
@@ -131,7 +131,7 @@ class Addons_List_list_move(Operator):
                         
             else:
                 if self.index_from_add_action:
-                    count = count + 1
+                    count += 1
 
             wm.addons_list_index = count
 
@@ -297,7 +297,7 @@ class ADDONS_LIST_UL_items(UIList):
         #         info = addon_utils.module_bl_info(module)
 
 
-        # if item.index_from_group != scene.addons_helper_list_index:
+        # if item.index_from_group != scene.addons_groups_list_index:
 
                 # idx = index
 
@@ -311,7 +311,7 @@ class ADDONS_LIST_UL_items(UIList):
 
     
         
-        if item.index_from_group == scene.addons_helper_list_index:
+        if item.index_from_group == wm.addons_groups_list_index:
                                      
                 
                 
@@ -382,9 +382,10 @@ class ADDONS_LIST_UL_items(UIList):
 
                 row = main_row.row(align = 1)
                 row.prop(item, "text", emboss=1, text = "")
+                row.alignment = "RIGHT"
 
                 if index == wm.addons_list_index:
-                        row.label(icon = "TRIA_LEFT", text = "")
+                    row.label(icon = "TRIA_LEFT", text = "")
 
 
                 # addons = [

@@ -29,7 +29,7 @@ custom_scene_name = ".Addons_Helper_Data"
 
 class Addons_Helper_List_actions(Operator):
     """Move items up and down, add and remove"""
-    bl_idname = "addons_helper_list.list_action"
+    bl_idname = "addons_groups_list.list_action"
     bl_label = ""
     bl_description = "Move items up and down or remove"
     bl_options = {'REGISTER'}
@@ -52,26 +52,27 @@ class Addons_Helper_List_actions(Operator):
     def invoke(self, context, event):
 
         scene = context.scene
-        idx = scene.addons_helper_list_index
+        wm = context.window_manager
+        idx = wm.addons_groups_list_index
 
         try:
-            item = scene.addons_helper_list[idx]
+            item = scene.addons_groups_list[idx]
         except IndexError:
             pass
         else:
-            if self.action == 'DOWN' and idx < len(scene.addons_helper_list) - 1:
-                scene.addons_helper_list.move(idx, idx+1)
-                scene.addons_helper_list_index += 1
+            if self.action == 'DOWN' and idx < len(scene.addons_groups_list) - 1:
+                scene.addons_groups_list.move(idx, idx+1)
+                wm.addons_groups_list_index += 1
 
             elif self.action == 'UP' and idx >= 1:
-                scene.addons_helper_list.move(idx, idx-1)
-                scene.addons_helper_list_index -= 1
+                scene.addons_groups_list.move(idx, idx-1)
+                wm.addons_groups_list_index -= 1
                 
 
         return {"FINISHED"}
 class Addons_Helper_List_actions_add(Operator):
     """Move items up and down, add and remove"""
-    bl_idname = "addons_helper_list.list_action_add"
+    bl_idname = "addons_groups_list.list_action_add"
     bl_label = ""
     bl_description = "Add item"
     bl_options = {'REGISTER'}
@@ -95,28 +96,29 @@ class Addons_Helper_List_actions_add(Operator):
     def execute(self, context):
 
         scene = context.scene
-        idx = scene.addons_helper_list_index
+        wm = context.window_manager
+        idx = wm.addons_groups_list_index
 
         try:
-            item = scene.addons_helper_list[idx]
+            item = scene.addons_groups_list[idx]
         except IndexError:
             pass
 
-        item = scene.addons_helper_list.add()
+        item = scene.addons_groups_list.add()
 
-        scene.addons_helper_list_index = len(scene.addons_helper_list) - 1
+        wm.addons_groups_list_index = len(scene.addons_groups_list) - 1
 
         return {"FINISHED"}       
 class Addons_Helper_List_actions_remove(Operator):
     """Clear all items of the list"""
-    bl_idname = "addons_helper_list.list_action_remove"
+    bl_idname = "addons_groups_list.list_action_remove"
     bl_label = "Remove"
     bl_description = "Clear all items of the list"
     bl_options = {'INTERNAL'}
 
     @classmethod
     def poll(cls, context):
-        return bool(context.scene.addons_helper_list)
+        return bool(context.scene.addons_groups_list)
 
     def invoke(self, context, event):
         return context.window_manager.invoke_confirm(self, event)
@@ -124,40 +126,41 @@ class Addons_Helper_List_actions_remove(Operator):
     def execute(self, context):
 
         scene = context.scene
-        idx = scene.addons_helper_list_index
+        wm = context.window_manager
+        idx = wm.addons_groups_list_index
         
         if idx == 0:
-            scene.addons_helper_list_index = 0
+            wm.addons_groups_list_index = 0
         else:
-            scene.addons_helper_list_index -= 1
+            wm.addons_groups_list_index -= 1
         
-        scene.addons_helper_list.remove(idx)
+        scene.addons_groups_list.remove(idx)
 
         return {"FINISHED"}  
 class Addons_Helper_List_clearList(Operator):
     """Clear all items of the list"""
-    bl_idname = "addons_helper_list.clear_list"
+    bl_idname = "addons_groups_list.clear_list"
     bl_label = "Clear List"
     bl_description = "Clear all items of the list"
     bl_options = {'INTERNAL'}
 
     @classmethod
     def poll(cls, context):
-        return bool(context.scene.addons_helper_list)
+        return bool(context.scene.addons_groups_list)
 
     def invoke(self, context, event):
         return context.window_manager.invoke_confirm(self, event)
 
     def execute(self, context):
-        if bool(context.scene.addons_helper_list):
-            context.scene.addons_helper_list.clear()
+        if bool(context.scene.addons_groups_list):
+            context.scene.addons_groups_list.clear()
             self.report({'INFO'}, "All items removed")
         else:
             self.report({'INFO'}, "Nothing to remove")
         return{'FINISHED'}
 class Addons_Helper_List_actions_bool(Operator):
     """Move items up and down, add and remove"""
-    bl_idname = "addons_helper_list.list_action_bool"
+    bl_idname = "addons_groups_list.list_action_bool"
     bl_label = ""
     bl_description = "Checkmark"
     bl_options = {'REGISTER'}
@@ -166,25 +169,25 @@ class Addons_Helper_List_actions_bool(Operator):
 
     def execute(self, context):
 
-        # bpy.context.scene.addons_helper_list_index = self.my_index
+        # bpy.context.scene.addons_groups_list_index = self.my_index
 
         scene = context.scene
-        # idx = scene.addons_helper_list_index
+        # idx = scene.addons_groups_list_index
         idx = self.my_index
 
         try:
-            item = scene.addons_helper_list[idx]
+            item = scene.addons_groups_list[idx]
         except IndexError:
             pass
 
         
-        if scene.addons_helper_list[idx].bool == True:
-            scene.addons_helper_list[idx].bool = False
-            if len(scene.addons_helper_list) > 1:
-                scene.addons_helper_list.move(idx, 0)
+        if scene.addons_groups_list[idx].bool == True:
+            scene.addons_groups_list[idx].bool = False
+            if len(scene.addons_groups_list) > 1:
+                scene.addons_groups_list.move(idx, 0)
         else:
-            scene.addons_helper_list[idx].bool = True
-            scene.addons_helper_list.move(idx, len(scene.addons_helper_list) - 1)
+            scene.addons_groups_list[idx].bool = True
+            scene.addons_groups_list.move(idx, len(scene.addons_groups_list) - 1)
 
 
         return {"FINISHED"}
@@ -202,10 +205,10 @@ def count_enabled_and_disabled(group_index):
         item_is_enabled = module_name in used_ext
 
         if item_is_enabled == True and i.index_from_group == index:
-            item_is_enabled_count = item_is_enabled_count + 1
+            item_is_enabled_count += 1
 
         if item_is_enabled == False and i.index_from_group == index:
-            item_is_disabled_count = item_is_disabled_count + 1
+            item_is_disabled_count += 1
 
     return item_is_enabled_count, item_is_disabled_count
 
@@ -215,9 +218,10 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
 
         scene = context.scene
+        wm = context.window_manager
 
         try:
-            item = scene.addons_helper_list[index]
+            item = scene.addons_groups_list[index]
         except IndexError:
             pass
 
@@ -232,8 +236,8 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
         # split.operator("addons_list.list_move", icon= "NONE", text = " ", depress = 0).group_index = index
 
         row = first_row.row(align = 1)
-        depress = True if index == scene.addons_helper_list_index else False
-        ico = "PLAY" if index == scene.addons_helper_list_index else "NONE"
+        depress = True if index == wm.addons_groups_list_index else False
+        ico = "PLAY" if index == wm.addons_groups_list_index else "NONE"
         row.operator("addons_list.list_move", icon= ico, text = tex, depress = depress).group_index = index
         # row.alignment = "LEFT"
         # row.alignment = "CENTER"
@@ -254,7 +258,7 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
         row_right = row.row(align = 1)
         # row_right.alignment = "CENTER"
 
-        if index == scene.addons_helper_list_index:
+        if index == wm.addons_groups_list_index:
             row_left.operator("addons_list.list_move", icon= "NONE", text = " ", depress = 0).group_index = index
             row_center.operator("addons_list.list_move", icon=item.symbols, text = item.name, depress = 1).group_index = index
             row_right.operator("addons_list.list_move", icon= "NONE", text = " ", depress = 0).group_index = index
@@ -280,7 +284,7 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
 
 
 
-        # if index == scene.addons_helper_list_index:
+        # if index == scene.addons_groups_list_index:
 
         #     # first_row.label(icon = "TRIA_RIGHT")
         #     first_row.label(icon = "TRIA_DOWN")
@@ -297,11 +301,11 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
 
 
         
-        if index != scene.addons_helper_list_index:
+        if index != wm.addons_groups_list_index:
             
             first_column.separator(factor = 1.5)
 
-            if index == (scene.addons_helper_list_index - 1):
+            if index == (wm.addons_groups_list_index - 1):
                 first_column.separator(factor = 7)
 
         else:
@@ -499,17 +503,17 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
         # row_header.scale_y = .8
 
 
-        # if bpy.context.scene.addons_helper_list[index].bool == True:
+        # if bpy.context.scene.addons_groups_list[index].bool == True:
         #     row_info = row_header.row(align = 1)
-        #     row_info.operator("addons_helper_list.list_action_bool", text = "", icon = "CHECKBOX_DEHLT", emboss = 0).my_index = index
+        #     row_info.operator("addons_groups_list.list_action_bool", text = "", icon = "CHECKBOX_DEHLT", emboss = 0).my_index = index
         #     row_info.alignment = 'RIGHT'
 
         #     # row_info = row_header.row(align = 1)
-        #     # row_info.operator("addons_helper_list.list_action_bool", text = "", icon = "SHADING_SOLID", emboss = 0).my_index = index
+        #     # row_info.operator("addons_groups_list.list_action_bool", text = "", icon = "SHADING_SOLID", emboss = 0).my_index = index
         #     # row_info.alignment = 'CENTER'
         # else:
         #     row_info = row_header.row(align = 1)
-        #     row_info.operator("addons_helper_list.list_action_bool", text = "", icon = "BOOKMARKS", emboss = 0).my_index = index
+        #     row_info.operator("addons_groups_list.list_action_bool", text = "", icon = "BOOKMARKS", emboss = 0).my_index = index
         #     row_info.alignment = 'LEFT'
 
         # if item.text.count("\n") > 0:
