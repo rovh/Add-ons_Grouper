@@ -390,10 +390,8 @@ class Addons_Helper_List_auto_enable(Operator):
 
         if action == "enable":
             x = 'auto_enable_list'
-            y = 'auto_enable'
         elif action == "disable":
             x = 'auto_disable_list'
-            y = 'auto_disable'
 
 
 
@@ -406,15 +404,22 @@ class Addons_Helper_List_auto_enable(Operator):
 
         group_index = self.group_index
 
+        
 
-
-
-
-        if bpy.context.scene.addons_groups_list[group_index][y] == True:
-            bpy.context.scene.addons_groups_list[group_index][y] = False
+        if bpy.context.scene.addons_groups_list[group_index].auto_enable == True:
+            bpy.context.scene.addons_groups_list[group_index].auto_enable = False
             enable = False
         else:
-            bpy.context.scene.addons_groups_list[group_index][y] = True
+            bpy.context.scene.addons_groups_list[group_index].auto_enable = True
+            enable = True
+
+
+
+        if bpy.context.scene.addons_groups_list[group_index].auto_enable == True:
+            bpy.context.scene.addons_groups_list[group_index].auto_enable = False
+            enable = False
+        else:
+            bpy.context.scene.addons_groups_list[group_index].auto_enable = True
             enable = True
 
 
