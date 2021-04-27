@@ -166,8 +166,6 @@ class Addons_Helper_Switch(Operator):
 
     auto_enable: BoolProperty()
 
-    auto_enable_list: StringProperty()
-
     action: StringProperty()
 
 
@@ -176,6 +174,9 @@ class Addons_Helper_Switch(Operator):
 
         if self.auto_enable == True:
 
+            action = self.action
+            
+
             auto_enable_list = bpy.data.scenes[custom_scene_name].auto_enable_list.split(".")
             try:
                 auto_enable_list.pop(0)
@@ -183,16 +184,14 @@ class Addons_Helper_Switch(Operator):
             except IndexError:
                 pass
 
+            for group_index in auto_enable_list:
 
-            for self.group_index in auto_enable_list:
-
-                action = self.action
-
+                group_index = int(group_index)
 
                 for item in bpy.context.scene.addons_list:
 
-                    if item.index_from_group == self.group_index:
-                        
+                    if group_index == item.index_from_group:
+
                         module_name = find_addon_name(item.text, module_name=True)
                         
                         prefs = context.preferences
@@ -202,7 +201,7 @@ class Addons_Helper_Switch(Operator):
 
                     
 
-
+                        
 
                         if action == "ENABLE":
                             if is_enabled == False:
@@ -284,11 +283,6 @@ class Addons_Helper_Pickle(Operator):
                 data = pickle.load(f)
 
 
-            try:
-                data.remove("auto_enable")
-            except ValueError:
-                pass
-
 
             length_data = len(data)
             length_addons_helper_list = len(context.scene.addons_groups_list)
@@ -303,14 +297,18 @@ class Addons_Helper_Pickle(Operator):
 
             for index, element in enumerate(data):
 
-                for i in element:
+                if element[0] == "auto_enable":
+                    pass
+                else:
 
-                    name = i[0]
-                    value = i[1]
+                    for i in element:
 
-                    bpy.context.scene.addons_groups_list[index][name] = value
+                        name = i[0]
+                        value = i[1]
 
-                    # print(name, value)
+                        bpy.context.scene.addons_groups_list[index][name] = value
+
+                        # print(name, value)
 
 
 
@@ -352,10 +350,6 @@ class Addons_Helper_Pickle(Operator):
             for i in bpy.context.scene.addons_groups_list:
                 data.append( i.items() )
             
-            try:
-                data.remove("auto_enable")
-            except ValueError:
-                pass
 
             with open('saved_data_Addons_Groups_List.pickle', 'wb') as f:
                 pickle.dump(data, f)
@@ -397,8 +391,10 @@ class Addons_Helper_List_auto_enable(Operator):
 
         if bpy.context.scene.addons_groups_list[group_index].auto_enable == True:
             bpy.context.scene.addons_groups_list[group_index].auto_enable = False
+            enable = False
         else:
             bpy.context.scene.addons_groups_list[group_index].auto_enable = True
+            enable = True
 
 
 
@@ -410,14 +406,16 @@ class Addons_Helper_List_auto_enable(Operator):
 
         find = bpy.data.scenes[custom_scene_name].auto_enable_list.find(sufix_2)
 
-        if find == -1:
-            
-            if len(bpy.data.scenes[custom_scene_name].auto_enable_list) == 0:
-                
-                bpy.data.scenes[custom_scene_name].auto_enable_list += sufix_2
-            else:
+        if enable == True:
 
-                bpy.data.scenes[custom_scene_name].auto_enable_list += sufix_3
+            if find == -1:
+                
+                if len(bpy.data.scenes[custom_scene_name].auto_enable_list) == 0:
+                    
+                    bpy.data.scenes[custom_scene_name].auto_enable_list += sufix_2
+                else:
+
+                    bpy.data.scenes[custom_scene_name].auto_enable_list += sufix_3
             
         else:
 
@@ -531,7 +529,7 @@ def load_handler(dummy):
     if bpy.data.scenes.find(custom_scene_name) == -1:
             bpy.data.scenes.new(custom_scene_name)
 
-    bpy.ops.addons_helper.switch(action = "ENABLE", auto_enable_list = bpy.data.scenes[custom_scene_name].auto_enable_list, auto_enable = True)
+    bpy.ops.addons_helper.switch(action = "ENABLE", auto_enable = True)
 
 
     bpy.app.handlers.load_post.remove(load_handler)
@@ -595,6 +593,7 @@ def unregister():
     # bpy.app.handlers.load_post.append(end_handler)
 
     bpy.ops.addons_helper.pickle(action = "EXPORT")
+    bpy.ops.addons_helper.switch(action = "DISABLE", auto_enable = True)
 
     if load_handler in bpy.app.handlers.load_post:
         bpy.app.handlers.load_post.remove(load_handler)

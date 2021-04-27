@@ -203,10 +203,11 @@ class Addons_List_actions_remove(Operator):
 
     def invoke(self, context, event):
 
-        wm = context.window_manager
-        # idx = context.scene.addons_list_index
-        idx = wm.addons_list_index
-        if wm.addons_list[idx].index_from_group == self.group_index:
+        # wm = context.window_manager
+        scene = context.scene
+        idx = scene.addons_list_index
+        # idx = wm.addons_list_index
+        if scene.addons_list[idx].index_from_group == self.group_index:
             return context.window_manager.invoke_confirm(self, event)
         else:
             return {"FINISHED"}  
