@@ -158,39 +158,6 @@ class Addons_Helper_List_clearList(Operator):
         else:
             self.report({'INFO'}, "Nothing to remove")
         return{'FINISHED'}
-class Addons_Helper_List_actions_bool(Operator):
-    """Move items up and down, add and remove"""
-    bl_idname = "addons_groups_list.list_action_bool"
-    bl_label = ""
-    bl_description = "Checkmark"
-    bl_options = {'REGISTER'}
-
-    my_index: IntProperty()
-
-    def execute(self, context):
-
-        # bpy.context.scene.addons_groups_list_index = self.my_index
-
-        scene = context.scene
-        # idx = scene.addons_groups_list_index
-        idx = self.my_index
-
-        try:
-            item = scene.addons_groups_list[idx]
-        except IndexError:
-            pass
-
-        
-        if scene.addons_groups_list[idx].bool == True:
-            scene.addons_groups_list[idx].bool = False
-            if len(scene.addons_groups_list) > 1:
-                scene.addons_groups_list.move(idx, 0)
-        else:
-            scene.addons_groups_list[idx].bool = True
-            scene.addons_groups_list.move(idx, len(scene.addons_groups_list) - 1)
-
-
-        return {"FINISHED"}
 
 
 def count_enabled_and_disabled(group_index):
@@ -220,10 +187,10 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
         scene = context.scene
         wm = context.window_manager
 
-        try:
-            item = scene.addons_groups_list[index]
-        except IndexError:
-            pass
+        # try:
+        #     item = scene.addons_groups_list[index]
+        # except IndexError:
+        #     pass
 
 
         first_column = layout.column(align = 1)
@@ -364,6 +331,10 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
             
 
             row = main_column.row()
+
+            depress = True if item.auto_enable == True else False
+            row.operator("addons_helper.auto_enable", icon="CHECKMARK", text = "Enable At Start", depress = depress).group_index = index
+
 
             if item_is_enabled_count == 0:
                 row.operator("addons_helper.switch", icon="CHECKMARK", text = "Enable All").group_index__and__action = str(index) + "_ENABLE"
@@ -546,15 +517,13 @@ class Notes_List_Collection(PropertyGroup):
     # addons_list: CollectionProperty(type=Addons_List_Collection)
 
     text: StringProperty()
-    link_text: StringProperty()
-    link_text_2: StringProperty()
     addon_link: StringProperty()
-    # description: StringProperty()
-    # description_2: StringProperty()
-    # description_3: StringProperty()
+
     ico_name: StringProperty(default = "BLANK1")
+
     name: StringProperty(default = "-")
-    bool_view: BoolProperty()
+
+    auto_enable: BoolProperty(default = False)
 
     names_list = [
         "LAYER_ACTIVE",
@@ -617,7 +586,6 @@ blender_classes_Addons_Groups_List = [
     Addons_Helper_List_actions_add,
     Addons_Helper_List_actions_remove,
     ADDONS_GROUPER_LIST_UL_items,
-    Addons_Helper_List_actions_bool,
     Addons_Helper_List_clearList,
     
 ]

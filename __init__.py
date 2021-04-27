@@ -164,47 +164,91 @@ class Addons_Helper_Switch(Operator):
 
     group_index__and__action: StringProperty()
 
+    auto_enable: BoolProperty()
+
+    auto_enable_list: StringProperty()
+
+    action: StringProperty()
+
 
     def execute(self, context):
 
-        keyword = "_"
-        before_keyword, keyword, after_keyword = self.group_index__and__action.partition(keyword)
-            
-        self.group_index = int(before_keyword)
-        action = after_keyword
 
-        for item in bpy.context.scene.addons_list:
+        if self.auto_enable == True:
 
-            if item.index_from_group == self.group_index:
+            auto_enable_list = bpy.data.scenes[custom_scene_name].auto_enable_list.split(".")
+            try:
+                auto_enable_list.pop(0)
+                auto_enable_list.pop(-1)
+            except IndexError:
+                pass
+
+
+            for self.group_index in auto_enable_list:
+
+                action = self.action
+
+
+                for item in bpy.context.scene.addons_list:
+
+                    if item.index_from_group == self.group_index:
+                        
+                        module_name = find_addon_name(item.text, module_name=True)
+                        
+                        prefs = context.preferences
+                        used_ext = {ext.module for ext in prefs.addons}
+                        
+                        is_enabled = module_name in used_ext
+
+                    
+
+
+
+                        if action == "ENABLE":
+                            if is_enabled == False:
+                                addon_utils.enable(
+                                module_name, default_set=1, persistent=0, handle_error=None)
+                        
+                        else:
+                            if is_enabled == True:
+                                addon_utils.disable(
+                                module_name, default_set=1,handle_error=None)
+
+        else:
+
+            keyword = "_"
+
+            before_keyword, keyword, after_keyword = self.group_index__and__action.partition(keyword)
                 
-                module_name = find_addon_name(item.text, module_name=True)
+
+            self.group_index = int(before_keyword)
+            action = after_keyword
+
+
+            for item in bpy.context.scene.addons_list:
+
+                if item.index_from_group == self.group_index:
+                    
+                    module_name = find_addon_name(item.text, module_name=True)
+                    
+                    prefs = context.preferences
+                    used_ext = {ext.module for ext in prefs.addons}
+                    
+                    is_enabled = module_name in used_ext
+
                 
-                prefs = context.preferences
-                used_ext = {ext.module for ext in prefs.addons}
-                
-                is_enabled = module_name in used_ext
-
-            
-
-                if action == "ENABLE":
-                    if is_enabled == False:
-                        addon_utils.enable(
-                        module_name, default_set=1, persistent=0, handle_error=None)
-                
-                else:
-                    if is_enabled == True:
-                        addon_utils.disable(
-                        module_name, default_set=1,handle_error=None)
-            
-
-            
-        # if bool_swith == True:
-        #     bool_swith = False
-        # else:
-        #     bool_swith = True
 
 
 
+                    if action == "ENABLE":
+                        if is_enabled == False:
+                            addon_utils.enable(
+                            module_name, default_set=1, persistent=0, handle_error=None)
+                    
+                    else:
+                        if is_enabled == True:
+                            addon_utils.disable(
+                            module_name, default_set=1,handle_error=None)
 
 
 
@@ -234,8 +278,17 @@ class Addons_Helper_Pickle(Operator):
 
         if self.action == "IMPORT":
 
+
+
             with open('saved_data_Addons_Groups_List.pickle', 'rb') as f:
                 data = pickle.load(f)
+
+
+            try:
+                data.remove("auto_enable")
+            except ValueError:
+                pass
+
 
             length_data = len(data)
             length_addons_helper_list = len(context.scene.addons_groups_list)
@@ -245,6 +298,8 @@ class Addons_Helper_Pickle(Operator):
                 for _ in range(length):
                     context.scene.addons_groups_list.add()
                 
+
+
 
             for index, element in enumerate(data):
 
@@ -285,19 +340,26 @@ class Addons_Helper_Pickle(Operator):
 
                     # print(name, value)
         
+
+
+
+
+
         elif self.action == "EXPORT":
 
 
             data = []
             for i in bpy.context.scene.addons_groups_list:
                 data.append( i.items() )
+            
+            try:
+                data.remove("auto_enable")
+            except ValueError:
+                pass
 
             with open('saved_data_Addons_Groups_List.pickle', 'wb') as f:
                 pickle.dump(data, f)
 
-            # with open('saved_data_Addons_Groups_List.pickle', 'rb') as f:
-            #     data_new = pickle.load(f)
-            # print(data_new)
 
 
             data = []
@@ -307,13 +369,140 @@ class Addons_Helper_Pickle(Operator):
             with open('saved_data_Addons_List.pickle', 'wb') as f:
                 pickle.dump(data, f)
 
-            # with open('saved_data_Addons_List.pickle', 'rb') as f:
-            #     data_new = pickle.load(f)
-            # print(data_new)
 
 
 
         return {"FINISHED"}  
+
+class Addons_Helper_List_auto_enable(Operator):
+    """Move items up and down, add and remove"""
+    bl_idname = "addons_helper.auto_enable"
+    bl_label = ""
+    bl_description = "Checkmark"
+    bl_options = {'REGISTER'}
+
+    group_index: IntProperty()
+
+    def execute(self, context):
+
+        if bpy.data.scenes.find(custom_scene_name) == -1:
+            bpy.data.scenes.new(custom_scene_name)
+
+
+
+
+        group_index = self.group_index
+        # auto_enable_list_string = bpy.data.scenes[custom_scene_name].auto_enable_list
+        
+
+        if bpy.context.scene.addons_groups_list[group_index].auto_enable == True:
+            bpy.context.scene.addons_groups_list[group_index].auto_enable = False
+        else:
+            bpy.context.scene.addons_groups_list[group_index].auto_enable = True
+
+
+
+
+        sufix = str(group_index)
+        sufix_2 = "." + sufix + "."
+        sufix_3 = sufix + "."
+        sufix_4 = "." + sufix
+
+        find = bpy.data.scenes[custom_scene_name].auto_enable_list.find(sufix_2)
+
+        if find == -1:
+            
+            if len(bpy.data.scenes[custom_scene_name].auto_enable_list) == 0:
+                
+                bpy.data.scenes[custom_scene_name].auto_enable_list += sufix_2
+            else:
+
+                bpy.data.scenes[custom_scene_name].auto_enable_list += sufix_3
+            
+        else:
+
+            if find == 0:
+                bpy.data.scenes[custom_scene_name].auto_enable_list = bpy.data.scenes[custom_scene_name].auto_enable_list.replace(sufix_4, "")
+            else:
+                bpy.data.scenes[custom_scene_name].auto_enable_list = bpy.data.scenes[custom_scene_name].auto_enable_list.replace(sufix_3, "") 
+
+            if len(bpy.data.scenes[custom_scene_name].auto_enable_list) < 3:
+                bpy.data.scenes[custom_scene_name].auto_enable_list = ""
+
+       
+
+
+        print()
+        print()
+        print(bpy.data.scenes[custom_scene_name].auto_enable_list) 
+        # print(split_list)
+
+        
+
+
+
+
+
+
+        # if len(bpy.data.scenes[custom_scene_name].auto_enable_list) != 0:
+        #     split_list_before = bpy.data.scenes[custom_scene_name].auto_enable_list.split(".")
+        #     length_before = len(split_list_before)
+        # else:
+        #     length_before = 0
+     
+
+
+
+
+
+        # if len(bpy.data.scenes[custom_scene_name].auto_enable_list) == 0:
+        #     sufix = str(group_index)
+        #     auto_enable_list_maybe = str(group_index)
+        # else:
+        #     sufix = "." + str(group_index)
+        #     sufix_2 =  str(group_index)
+        #     auto_enable_list_maybe = bpy.data.scenes[custom_scene_name].auto_enable_list + sufix
+
+        
+
+
+
+
+
+        # if len(auto_enable_list_maybe) != 0:
+        #     split_list_after = auto_enable_list_maybe.split(".")
+        #     split_list_after = set(split_list_after)
+        #     length_after = len(split_list_after)
+        # else:
+        #     length_after = 0
+
+
+
+
+        # if length_after > length_before:
+        #     bpy.data.scenes[custom_scene_name].auto_enable_list = auto_enable_list_maybe
+        # else:
+        #     if length_before == 1:
+        #         bpy.data.scenes[custom_scene_name].auto_enable_list = bpy.data.scenes[custom_scene_name].auto_enable_list.replace(sufix_2, "") 
+        #     bpy.data.scenes[custom_scene_name].auto_enable_list = bpy.data.scenes[custom_scene_name].auto_enable_list.replace(sufix, "")
+
+
+
+
+
+        # split_list = bpy.data.scenes[custom_scene_name].auto_enable_list.split(".")
+        # print (bpy.data.scenes[custom_scene_name].auto_enable_list)
+          
+        # print(split_list)
+        # print()
+        # print()
+        # print(length_before)
+        # print(length_after)
+
+
+
+               
+        return {"FINISHED"}
 
 
 # class Addons_Helper_(Operator):
@@ -334,12 +523,16 @@ class Addons_Helper_Pickle(Operator):
 @persistent
 def load_handler(dummy):
 
-    # print(11111111111111111111) 
-
     try:
         bpy.ops.addons_helper.pickle(action = "IMPORT")
     except RuntimeError:
         pass
+
+    if bpy.data.scenes.find(custom_scene_name) == -1:
+            bpy.data.scenes.new(custom_scene_name)
+
+    bpy.ops.addons_helper.switch(action = "ENABLE", auto_enable_list = bpy.data.scenes[custom_scene_name].auto_enable_list, auto_enable = True)
+
 
     bpy.app.handlers.load_post.remove(load_handler)
 
@@ -363,6 +556,7 @@ blender_classes = [
     Addons_Helper_Open_Browser_Or_Folder,
     Addons_Helper_Switch,
     Addons_Helper_Pickle,
+    Addons_Helper_List_auto_enable,
 ]
 
 blender_classes = \
@@ -375,6 +569,8 @@ def register():
 
     for blender_class in blender_classes:
         bpy.utils.register_class(blender_class)
+
+    bpy.types.Scene.auto_enable_list = StringProperty()
 
     bpy.types.Scene.addons_groups_list = CollectionProperty(type=Notes_List_Collection)
     bpy.types.WindowManager.addons_groups_list_index = IntProperty()
@@ -412,6 +608,7 @@ def unregister():
     del bpy.types.Scene.addons_list
     del bpy.types.WindowManager.addons_list_index
 
+    del bpy.types.Scene.auto_enable_list
     
 
 
