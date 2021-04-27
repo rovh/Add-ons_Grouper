@@ -333,7 +333,9 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
             row = main_column.row()
 
             depress = True if item.auto_enable == True else False
-            row.operator("addons_helper.auto_enable", icon="CHECKMARK", text = "Enable At Start", depress = depress).group_index = index
+            row.operator("addons_helper.auto_enable", icon="CHECKMARK", text = "Enable on Start", depress = depress).group_index__and__action = str(index) + "_" + "enable"
+            depress = True if item.auto_disable == True else False
+            row.operator("addons_helper.auto_enable", icon="CHECKBOX_DEHLT", text = "Disable on Start", depress = depress).group_index__and__action = str(index) + "_" + "disable"
 
 
             if item_is_enabled_count == 0:
@@ -524,6 +526,9 @@ class Notes_List_Collection(PropertyGroup):
     name: StringProperty(default = "-")
 
     auto_enable: BoolProperty(default = False)
+
+    auto_disable: BoolProperty(default = False)
+    
 
     names_list = [
         "LAYER_ACTIVE",

@@ -151,8 +151,6 @@ class Addons_Helper_Open_Browser_Or_Folder(Operator):
 
         return {"FINISHED"}
 
-bool_swith = True
-
 class Addons_Helper_Switch(Operator):
     """Move items up and down, add and remove"""
     bl_idname = "addons_helper.switch"
@@ -377,7 +375,28 @@ class Addons_Helper_List_auto_enable(Operator):
 
     group_index: IntProperty()
 
+    group_index__and__action: StringProperty()
+
     def execute(self, context):
+
+        keyword = "_"
+
+        before_keyword, keyword, after_keyword = self.group_index__and__action.partition(keyword)
+            
+
+        self.group_index = int(before_keyword)
+        action = after_keyword
+
+
+        if action == "enable":
+            x = 'auto_enable_list'
+            y = 'auto_enable'
+        elif action == "disable":
+            x = 'auto_disable_list'
+            y = 'auto_disable'
+
+
+
 
         if bpy.data.scenes.find(custom_scene_name) == -1:
             bpy.data.scenes.new(custom_scene_name)
@@ -386,14 +405,16 @@ class Addons_Helper_List_auto_enable(Operator):
 
 
         group_index = self.group_index
-        # auto_enable_list_string = bpy.data.scenes[custom_scene_name].auto_enable_list
-        
 
-        if bpy.context.scene.addons_groups_list[group_index].auto_enable == True:
-            bpy.context.scene.addons_groups_list[group_index].auto_enable = False
+
+
+
+
+        if bpy.context.scene.addons_groups_list[group_index][y] == True:
+            bpy.context.scene.addons_groups_list[group_index][y] = False
             enable = False
         else:
-            bpy.context.scene.addons_groups_list[group_index].auto_enable = True
+            bpy.context.scene.addons_groups_list[group_index][y] = True
             enable = True
 
 
@@ -404,35 +425,35 @@ class Addons_Helper_List_auto_enable(Operator):
         sufix_3 = sufix + "."
         sufix_4 = "." + sufix
 
-        find = bpy.data.scenes[custom_scene_name].auto_enable_list.find(sufix_2)
+        find = bpy.data.scenes[custom_scene_name][x].find(sufix_2)
 
         if enable == True:
 
             if find == -1:
                 
-                if len(bpy.data.scenes[custom_scene_name].auto_enable_list) == 0:
+                if len(bpy.data.scenes[custom_scene_name][x]) == 0:
                     
-                    bpy.data.scenes[custom_scene_name].auto_enable_list += sufix_2
+                    bpy.data.scenes[custom_scene_name][x] += sufix_2
                 else:
 
-                    bpy.data.scenes[custom_scene_name].auto_enable_list += sufix_3
+                    bpy.data.scenes[custom_scene_name][x] += sufix_3
             
         else:
 
             if find == 0:
-                bpy.data.scenes[custom_scene_name].auto_enable_list = bpy.data.scenes[custom_scene_name].auto_enable_list.replace(sufix_4, "")
+                bpy.data.scenes[custom_scene_name][x] = bpy.data.scenes[custom_scene_name][x].replace(sufix_4, "")
             else:
-                bpy.data.scenes[custom_scene_name].auto_enable_list = bpy.data.scenes[custom_scene_name].auto_enable_list.replace(sufix_3, "") 
+                bpy.data.scenes[custom_scene_name][x] = bpy.data.scenes[custom_scene_name][x].replace(sufix_3, "") 
 
-            if len(bpy.data.scenes[custom_scene_name].auto_enable_list) < 3:
-                bpy.data.scenes[custom_scene_name].auto_enable_list = ""
+            if len(bpy.data.scenes[custom_scene_name][x]) < 3:
+                bpy.data.scenes[custom_scene_name][x] = ""
 
        
 
 
         print()
         print()
-        print(bpy.data.scenes[custom_scene_name].auto_enable_list) 
+        print(bpy.data.scenes[custom_scene_name][x]) 
         # print(split_list)
 
         
@@ -526,8 +547,6 @@ def load_handler(dummy):
     except RuntimeError:
         pass
 
-    if bpy.data.scenes.find(custom_scene_name) == -1:
-            bpy.data.scenes.new(custom_scene_name)
 
     bpy.ops.addons_helper.switch(action = "ENABLE", auto_enable = True)
 
