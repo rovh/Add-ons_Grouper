@@ -166,9 +166,11 @@ class Addons_Helper_Switch(Operator):
 
     group_index__and__action: StringProperty()
 
+    action: StringProperty()
+
     auto_enable_disable: BoolProperty()
 
-    action: StringProperty()
+    auto_enable_disable_list: StringProperty()
 
     def execute(self, context):
 
@@ -179,15 +181,17 @@ class Addons_Helper_Switch(Operator):
 
             if  bpy.data.scenes.find(custom_scene_name) != -1:
             
-                auto_enable_list = bpy.data.scenes[custom_scene_name].auto_enable_list
-                auto_disable_list = bpy.data.scenes[custom_scene_name].auto_disable_list
+                # auto_enable_list = bpy.data.scenes[custom_scene_name].auto_enable_list
+                # auto_disable_list = bpy.data.scenes[custom_scene_name].auto_disable_list
                 
-                if bool(auto_enable_list) == True:               
-                    auto_list = auto_enable_list
-                elif bool(auto_disable_list) == True:
-                    auto_list = auto_disable_list
-                else:
-                    return {"FINISHED"}
+                # if bool(auto_enable_list) == True:               
+                #     auto_list = auto_enable_list
+                # elif bool(auto_disable_list) == True:
+                #     auto_list = auto_disable_list
+                # else:
+                #     return {"FINISHED"}
+
+                auto_list = self.auto_enable_disable_list
 
                 action = self.action
 
@@ -619,6 +623,9 @@ class Addons_Helper_List_auto_enable_disable_list(Operator):
 
 #         return {"FINISHED"}
 
+# bpy.ops.addons_helper.switch(auto_enable_disable = True, action = "ENABLE", auto_enable_disable_list = bpy.data.scenes['.Addons_Helper_Data'].auto_enable_list)
+# bpy.ops.addons_helper.switch(auto_enable_disable = True, action = "DISABLE", auto_enable_disable_list = bpy.data.scenes['.Addons_Helper_Data'].auto_disable_list)
+
 def auto_enable_disable( reverse = False):
     if  bpy.data.scenes.find(custom_scene_name) != -1:
 
@@ -629,14 +636,13 @@ def auto_enable_disable( reverse = False):
 
             action = "ENABLE" if reverse == False else "DISABLE"
 
-            bpy.ops.addons_helper.switch(auto_enable_disable = True, action = action)
+            bpy.ops.addons_helper.switch(auto_enable_disable = True, action = action, auto_enable_disable_list = auto_enable_list)
 
-        elif bool(auto_disable_list) == True:
+        if bool(auto_disable_list) == True:
 
             action = "DISABLE" if reverse == False else "ENABLE"
 
-
-            bpy.ops.addons_helper.switch(auto_enable_disable = True, action = action)
+            bpy.ops.addons_helper.switch(auto_enable_disable = True, action = action, auto_enable_disable_list = auto_disable_list)
 
 @persistent
 def load_handler(dummy):
@@ -698,6 +704,7 @@ def register():
 
     # pickle_action(action = "IMPORT")
 
+
     bpy.app.handlers.load_post.append(load_handler)
 
     # bpy.ops.addons_helper.pickle(action = "IMPORT")
@@ -710,7 +717,7 @@ def unregister():
     # bpy.app.handlers.load_post.append(end_handler)
 
     
-    auto_enable_disable(reverse = False)
+    # auto_enable_disable(reverse = True)
     bpy.ops.addons_helper.pickle(action = "EXPORT")
     # bpy.ops.addons_helper.switch(action = "DISABLE", auto_enable = True)
 

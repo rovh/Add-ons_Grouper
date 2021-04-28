@@ -248,7 +248,7 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
 
         row = first_row.row(align = 1)
         depress = True if index == wm.addons_groups_list_index and item.show == True else False
-        ico = "PLAY" if index == wm.addons_groups_list_index and item.show == True else "NONE"
+        ico = "TRIA_RIGHT" if index == wm.addons_groups_list_index and item.show == True else "NONE"
         row.operator("addons_list.list_move", icon= ico, text = tex, depress = depress).group_index = index
         # row.alignment = "LEFT"
         # row.alignment = "CENTER"
@@ -316,12 +316,13 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
             
             first_column.separator(factor = 1.5)
 
-            if index == (wm.addons_groups_list_index - 1):
-                first_column.separator(factor = 7)
-
         else:
 
             if item.show == True:
+
+
+                if index == (wm.addons_groups_list_index - 1):
+                    first_column.separator(factor = 7)
 
 
                 main_box = first_column.box()
