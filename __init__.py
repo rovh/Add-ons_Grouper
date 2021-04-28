@@ -368,7 +368,7 @@ class Addons_Helper_Pickle(Operator):
 
 class Addons_Helper_List_auto_enable(Operator):
     """Move items up and down, add and remove"""
-    bl_idname = "addons_helper.auto_enable"
+    bl_idname = "addons_helper.auto_enable_disable"
     bl_label = ""
     bl_description = "Checkmark"
     bl_options = {'REGISTER'}
@@ -411,7 +411,6 @@ class Addons_Helper_List_auto_enable(Operator):
                 bpy.context.scene.addons_groups_list[group_index][y] = bpy.context.scene.addons_groups_list[group_index].auto_enable
             else:
                 bpy.context.scene.addons_groups_list[group_index][y] = bpy.context.scene.addons_groups_list[group_index].auto_disable
-            # print(000000000000000)
 
         try:
             bpy.data.scenes[custom_scene_name][x]
@@ -424,31 +423,13 @@ class Addons_Helper_List_auto_enable(Operator):
 
 
 
-       
-
-
-        print(bpy.context.scene.addons_groups_list[group_index][y])
-
         if bpy.context.scene.addons_groups_list[group_index][y] == True:
             bpy.context.scene.addons_groups_list[group_index][y] = False
             enable = False
-            print(11111111111)
         else:
             bpy.context.scene.addons_groups_list[group_index][y] = True
             enable = True
-            print(2222222222)
-
-        
-
-
-
-        # if bpy.context.scene.addons_groups_list[group_index][y] == True:
-        #     bpy.context.scene.addons_groups_list[group_index][y] = False
-        #     enable = False
-        # else:
-        #     bpy.context.scene.addons_groups_list[group_index][y] = True
-        #     enable = True
-
+    
 
 
 
@@ -483,11 +464,9 @@ class Addons_Helper_List_auto_enable(Operator):
        
 
 
-        # print()
-        # print()
-        # print(x, y) 
-        # print(bpy.data.scenes[custom_scene_name][x]) 
-        # print(split_list)
+        print()
+        print()
+        print(bpy.data.scenes[custom_scene_name][x], y) 
 
         
 
@@ -646,7 +625,7 @@ def unregister():
     # bpy.app.handlers.load_post.append(end_handler)
 
     bpy.ops.addons_helper.pickle(action = "EXPORT")
-    bpy.ops.addons_helper.switch(action = "DISABLE", auto_enable = True)
+    # bpy.ops.addons_helper.switch(action = "DISABLE", auto_enable = True)
 
     if load_handler in bpy.app.handlers.load_post:
         bpy.app.handlers.load_post.remove(load_handler)
