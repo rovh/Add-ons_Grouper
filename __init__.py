@@ -366,9 +366,42 @@ class Addons_Helper_Pickle(Operator):
 
         return {"FINISHED"}  
 
-class Addons_Helper_List_auto_enable(Operator):
+
+def finding(sufix, place_name, enable):
+
+    sufix_2 = "." + sufix + "."
+    sufix_3 = sufix + "."
+    sufix_4 = "." + sufix
+
+    x = place_name 
+
+    find = bpy.data.scenes[custom_scene_name][x].find(sufix_2)
+
+    if enable == True:
+
+        if find == -1:
+            
+            if len(bpy.data.scenes[custom_scene_name][x]) == 0:
+                
+                bpy.data.scenes[custom_scene_name][x] += sufix_2
+            else:
+
+                bpy.data.scenes[custom_scene_name][x] += sufix_3
+        
+    else:
+
+        if find == 0:
+            bpy.data.scenes[custom_scene_name][x] = bpy.data.scenes[custom_scene_name][x].replace(sufix_4, "")
+        else:
+            bpy.data.scenes[custom_scene_name][x] = bpy.data.scenes[custom_scene_name][x].replace(sufix_3, "") 
+
+        if len(bpy.data.scenes[custom_scene_name][x]) < 3:
+            bpy.data.scenes[custom_scene_name][x] = ""
+
+
+class Addons_Helper_List_auto_enable_disable_list(Operator):
     """Move items up and down, add and remove"""
-    bl_idname = "addons_helper.auto_enable_disable"
+    bl_idname = "addons_helper.auto_enable_disable_list"
     bl_label = ""
     bl_description = "Checkmark"
     bl_options = {'REGISTER'}
@@ -388,12 +421,27 @@ class Addons_Helper_List_auto_enable(Operator):
         action = after_keyword
 
 
+
+        auto_enable_list = 'auto_enable_list'
+        auto_enable = 'auto_enable'
+
+        auto_disable_list = 'auto_disable_list'
+        auto_disable = 'auto_disable'
+
         if action == "enable":
-            x = 'auto_enable_list'
-            y = 'auto_enable'
+            x = auto_enable_list
+            y = auto_enable
+
+            x_2 = auto_disable_list
+            y_2 = auto_disable
+
         elif action == "disable":
-            x = 'auto_disable_list'
-            y = 'auto_disable'
+            x = auto_disable_list
+            y = auto_disable
+
+            x_2 = auto_enable_list
+            y_2 = auto_enable
+
 
 
         group_index = self.group_index
@@ -404,21 +452,33 @@ class Addons_Helper_List_auto_enable(Operator):
         if bpy.data.scenes.find(custom_scene_name) == -1:
             bpy.data.scenes.new(custom_scene_name)
 
-        try:
-            bpy.context.scene.addons_groups_list[group_index][y]
-        except KeyError:
-            if action == "enable":
-                bpy.context.scene.addons_groups_list[group_index][y] = bpy.context.scene.addons_groups_list[group_index].auto_enable
-            else:
-                bpy.context.scene.addons_groups_list[group_index][y] = bpy.context.scene.addons_groups_list[group_index].auto_disable
 
+        """auto_enable"""
         try:
-            bpy.data.scenes[custom_scene_name][x]
+            bpy.context.scene.addons_groups_list[group_index][auto_enable]
         except KeyError:
-            if action == "enable":
-                bpy.data.scenes[custom_scene_name][x] = bpy.data.scenes[custom_scene_name].auto_enable_list
-            else:
-                bpy.data.scenes[custom_scene_name][x] = bpy.data.scenes[custom_scene_name].auto_disable_list
+            bpy.context.scene.addons_groups_list[group_index][auto_enable] = bpy.context.scene.addons_groups_list[group_index].auto_enable
+
+
+        """auto_enable_list"""
+        try:
+            bpy.data.scenes[custom_scene_name][auto_enable_list]
+        except KeyError:
+            bpy.data.scenes[custom_scene_name][auto_enable_list] = bpy.data.scenes[custom_scene_name].auto_enable_list
+
+
+        """auto_disable"""
+        try:
+            bpy.context.scene.addons_groups_list[group_index][auto_disable]
+        except KeyError:
+            bpy.context.scene.addons_groups_list[group_index][auto_disable] = bpy.context.scene.addons_groups_list[group_index].auto_disable
+
+
+        """auto_disable_list"""
+        try:
+            bpy.data.scenes[custom_scene_name][auto_disable_list]
+        except KeyError:
+            bpy.data.scenes[custom_scene_name][auto_disable_list] =bpy.data.scenes[custom_scene_name].auto_disable_list
 
 
 
@@ -426,47 +486,30 @@ class Addons_Helper_List_auto_enable(Operator):
         if bpy.context.scene.addons_groups_list[group_index][y] == True:
             bpy.context.scene.addons_groups_list[group_index][y] = False
             enable = False
-        else:
+
+        elif bpy.context.scene.addons_groups_list[group_index][y] == False:
             bpy.context.scene.addons_groups_list[group_index][y] = True
+            bpy.context.scene.addons_groups_list[group_index][y_2] = False
             enable = True
     
 
 
 
         sufix = str(group_index)
-        sufix_2 = "." + sufix + "."
-        sufix_3 = sufix + "."
-        sufix_4 = "." + sufix
-
-        find = bpy.data.scenes[custom_scene_name][x].find(sufix_2)
-
+        
         if enable == True:
+            finding(sufix = sufix, place_name = x, enable = enable)
+            finding(sufix = sufix, place_name = x_2, enable = not enable)
+        elif enable == False:
+            finding(sufix = sufix, place_name = x, enable = enable)
 
-            if find == -1:
-                
-                if len(bpy.data.scenes[custom_scene_name][x]) == 0:
-                    
-                    bpy.data.scenes[custom_scene_name][x] += sufix_2
-                else:
-
-                    bpy.data.scenes[custom_scene_name][x] += sufix_3
-            
-        else:
-
-            if find == 0:
-                bpy.data.scenes[custom_scene_name][x] = bpy.data.scenes[custom_scene_name][x].replace(sufix_4, "")
-            else:
-                bpy.data.scenes[custom_scene_name][x] = bpy.data.scenes[custom_scene_name][x].replace(sufix_3, "") 
-
-            if len(bpy.data.scenes[custom_scene_name][x]) < 3:
-                bpy.data.scenes[custom_scene_name][x] = ""
-
-       
+        
 
 
         print()
         print()
         print(bpy.data.scenes[custom_scene_name][x], y) 
+        print(bpy.data.scenes[custom_scene_name][x_2], y_2) 
 
         
 
@@ -585,7 +628,7 @@ blender_classes = [
     Addons_Helper_Open_Browser_Or_Folder,
     Addons_Helper_Switch,
     Addons_Helper_Pickle,
-    Addons_Helper_List_auto_enable,
+    Addons_Helper_List_auto_enable_disable_list,
 ]
 
 blender_classes = \

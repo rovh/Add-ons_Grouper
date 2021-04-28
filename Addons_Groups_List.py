@@ -330,13 +330,18 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
             item_is_enabled_count, item_is_disabled_count = count_enabled_and_disabled(index)
             
 
-            row = main_column.row()
+            main_row = main_column.row(align = 0)
 
+            row = main_row.row(align = 1)
+            # row.scale_x = 1.1
+            row.label(icon = "QUIT", text = "")
             depress = True if item.auto_enable == True else False
-            row.operator("addons_helper.auto_enable_disable", icon="CHECKMARK", text = "Enable on Start", depress = depress).group_index__and__action = str(index) + "_" + "enable"
+            row.operator("addons_helper.auto_enable_disable_list", icon="CHECKMARK", text = "", depress = depress).group_index__and__action = str(index) + "_" + "enable"
             depress = True if item.auto_disable == True else False
-            row.operator("addons_helper.auto_enable_disable", icon="CHECKBOX_DEHLT", text = "Disable on Start", depress = depress).group_index__and__action = str(index) + "_" + "disable"
+            row.operator("addons_helper.auto_enable_disable_list", icon="CHECKBOX_DEHLT", text = "", depress = depress).group_index__and__action = str(index) + "_" + "disable"
+            row.alignment = "LEFT"
 
+            row = main_row.row(align = 0)
 
             if item_is_enabled_count == 0:
                 row.operator("addons_helper.switch", icon="CHECKMARK", text = "Enable All").group_index__and__action = str(index) + "_ENABLE"
@@ -348,22 +353,38 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
             
 
             row.scale_x = .5
-            row.scale_y = 1.2
+            row.scale_y = 1.3
             row.alignment = "CENTER"
-
-            main_column.separator(factor = 3)
-
-
-
-
-            row = main_column.row()
-            row_left = row.row(align = 1)
-            row_left.alignment = "LEFT"
-            row_left.label(icon = "OUTLINER_OB_FONT", text = "Add-ons Group Name:")
-            row.prop(item, "name", emboss=1, text = "")
+            
+        
+            row = main_row.row(align = 0)
+       
+            row.label(icon = "BLANK1")
+            row.prop(item, "show_parameters", emboss=1, text = "", icon = "OUTLINER_DATA_GP_LAYER")
+            row.alignment = "RIGHT"
+            
+            
 
 
-            main_column.separator(factor = 1.5)
+            main_column.separator(factor = 2)
+
+            
+
+
+            if item.show_parameters == True:
+
+                main_column.separator(factor = 1)
+
+                box = main_column.box()
+
+                row = box.row()
+                row_left = row.row(align = 1)
+                row_left.alignment = "LEFT"
+                row_left.label(icon = "OUTLINER_OB_FONT", text = "Add-ons Group Name:")
+                row.prop(item, "name", emboss=1, text = "")
+
+
+                main_column.separator(factor = 1.5)
 
 
 
@@ -384,19 +405,19 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
             # row.prop(item, "description_3", emboss=1, text = "")
 
 
-            main_column.separator(factor = 1.5)
+                main_column.separator(factor = 1.5)
 
 
-            row = main_column.row(align = 1)
-            row_left = row.row(align = 1)
-            row_left.alignment = "LEFT"
-            row_left.label(icon = "BLENDER")
-            row_left.label(text = " Label:")
-            row_left.prop(item, 'symbols', expand = True)
+                row = box.row(align = 1)
+                row_left = row.row(align = 1)
+                row_left.alignment = "LEFT"
+                row_left.label(icon = "BLENDER")
+                row_left.label(text = " Label:")
+                row_left.prop(item, 'symbols', expand = True)
 
 
 
-            main_column.separator(factor = 1.5)
+                # main_column.separator(factor = 1.5)
 
 
 
@@ -517,6 +538,8 @@ class Notes_List_Collection(PropertyGroup):
 
 
     # addons_list: CollectionProperty(type=Addons_List_Collection)
+
+    show_parameters: BoolProperty()
 
     text: StringProperty()
     addon_link: StringProperty()
