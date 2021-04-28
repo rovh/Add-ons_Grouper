@@ -108,6 +108,7 @@ class Addons_List_list_move(Operator):
 
     index_from_add_action: BoolProperty()
 
+    use_show: BoolProperty(default = True)
 
     def execute(self, context):
 
@@ -116,14 +117,16 @@ class Addons_List_list_move(Operator):
         scene = context.scene
         wm = context.window_manager
 
-        if wm.addons_groups_list_index == self.group_index:
-            if wm.addons_groups_list[self.group_index].show == True:
-                wm.addons_groups_list[self.group_index].show = False
+        if self.use_show == True:
+
+            if wm.addons_groups_list_index == self.group_index:
+                if wm.addons_groups_list[self.group_index].show == True:
+                    wm.addons_groups_list[self.group_index].show = False
+                else:
+                    wm.addons_groups_list[self.group_index].show = True
             else:
+                wm.addons_groups_list_index = self.group_index
                 wm.addons_groups_list[self.group_index].show = True
-        else:
-            wm.addons_groups_list_index = self.group_index
-            wm.addons_groups_list[self.group_index].show = True
 
         
 
@@ -194,7 +197,7 @@ class Addons_List_actions_add(Operator):
 
         # bpy.ops.addons_list.list_move(index_from_add_action = True)
 
-        bpy.ops.addons_list.list_move(group_index = self.group_index, index_from_add_action = True)
+        bpy.ops.addons_list.list_move(group_index = self.group_index, index_from_add_action = True, use_show = False)
         
         
 
@@ -218,8 +221,8 @@ class Addons_List_actions_remove(Operator):
 
         wm = context.window_manager
         scene = context.scene
-        idx = scene.addons_list_index
-        # idx = wm.addons_list_index
+        # idx = scene.addons_list_index
+        idx = wm.addons_list_index
         if wm.addons_list[idx].index_from_group == self.group_index:
             return context.window_manager.invoke_confirm(self, event)
         else:
