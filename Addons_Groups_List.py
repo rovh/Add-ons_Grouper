@@ -228,7 +228,7 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
 
-        scene = context.scene
+        # scene = context.scene
         wm = context.window_manager
 
         # try:

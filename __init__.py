@@ -65,7 +65,7 @@ class Addons_Helper_Preferences (AddonPreferences):
     def draw(self, context):
             
         layout = self.layout
-        scene = bpy.context.scene
+        # scene = bpy.context.scene
         wm = context.window_manager
 
         rows = 2
@@ -99,6 +99,10 @@ class Addons_Helper_Preferences (AddonPreferences):
         
 
         col.operator("addons_groups_list.clear_list", icon="TRASH", text = "")
+
+        col.separator(factor = 4)
+
+        col.operator("addons_helper.pickle", icon='FILE_REFRESH', text="").action = "IMPORT"
         # row = layout.row()
         # col = row.column(align=True)
         # row = col.row(align=True)
@@ -162,56 +166,67 @@ class Addons_Helper_Switch(Operator):
 
     group_index__and__action: StringProperty()
 
-    auto_enable: BoolProperty()
+    auto_enable_disable: BoolProperty()
 
     action: StringProperty()
-
 
     def execute(self, context):
 
         wm = context.window_manager
 
 
-        if self.auto_enable == True:
+        if self.auto_enable_disable == True:
 
-            action = self.action
+            if  bpy.data.scenes.find(custom_scene_name) != -1:
             
+                auto_enable_list = bpy.data.scenes[custom_scene_name].auto_enable_list
+                auto_disable_list = bpy.data.scenes[custom_scene_name].auto_disable_list
+                
+                if bool(auto_enable_list) == True:               
+                    auto_list = auto_enable_list
+                elif bool(auto_disable_list) == True:
+                    auto_list = auto_disable_list
+                else:
+                    return {"FINISHED"}
 
-            auto_enable_list = bpy.data.scenes[custom_scene_name].auto_enable_list.split(".")
-            try:
-                auto_enable_list.pop(0)
-                auto_enable_list.pop(-1)
-            except IndexError:
-                pass
+                action = self.action
 
-            for group_index in auto_enable_list:
+                auto_list  = auto_list.split(".")
+                try:
+                    auto_list.pop(0)
+                    auto_list.pop(-1)
+                except IndexError:
+                    pass
 
-                group_index = int(group_index)
 
-                for item in wm.addons_list:
+                for group_index in auto_list:
 
-                    if group_index == item.index_from_group:
+                    group_index = int(group_index)
 
-                        module_name = find_addon_name(item.text, module_name=True)
+                    for item in wm.addons_list:
 
-                        if bool(module_name) == True:
-                        
-                            prefs = context.preferences
-                            used_ext = {ext.module for ext in prefs.addons}
+                        if group_index == item.index_from_group:
+
+                            module_name = find_addon_name(item.text, module_name=True)
+
+                            if bool(module_name) == True:
                             
-                            is_enabled = module_name in used_ext
+                                prefs = context.preferences
+                                used_ext = {ext.module for ext in prefs.addons}
+                                
+                                is_enabled = module_name in used_ext
 
-                        
-
-                            if action == "ENABLE":
-                                if is_enabled == False:
-                                    addon_utils.enable(
-                                    module_name, default_set=1, persistent=0, handle_error=None)
                             
-                            else:
-                                if is_enabled == True:
-                                    addon_utils.disable(
-                                    module_name, default_set=1,handle_error=None)
+
+                                if action == "ENABLE":
+                                    if is_enabled == False:
+                                        addon_utils.enable(
+                                        module_name, default_set=1, persistent=0, handle_error=None)
+                                
+                                else:
+                                    if is_enabled == True:
+                                        addon_utils.disable(
+                                        module_name, default_set=1,handle_error=None)
 
         else:
 
@@ -604,6 +619,25 @@ class Addons_Helper_List_auto_enable_disable_list(Operator):
 
 #         return {"FINISHED"}
 
+def auto_enable_disable( reverse = False):
+    if  bpy.data.scenes.find(custom_scene_name) != -1:
+
+        auto_enable_list = bpy.data.scenes[custom_scene_name].auto_enable_list
+        auto_disable_list = bpy.data.scenes[custom_scene_name].auto_disable_list
+
+        if bool(auto_enable_list) == True:
+
+            action = "ENABLE" if reverse == False else "DISABLE"
+
+            bpy.ops.addons_helper.switch(auto_enable_disable = True, action = action)
+
+        elif bool(auto_disable_list) == True:
+
+            action = "DISABLE" if reverse == False else "ENABLE"
+
+
+            bpy.ops.addons_helper.switch(auto_enable_disable = True, action = action)
+
 @persistent
 def load_handler(dummy):
 
@@ -612,10 +646,8 @@ def load_handler(dummy):
     except RuntimeError:
         pass
 
-
-    # bpy.ops.addons_helper.switch(action = "ENABLE", auto_enable = True)
-
-
+    auto_enable_disable(reverse = False)
+        
     bpy.app.handlers.load_post.remove(load_handler)
 
 # @persistent
@@ -677,6 +709,8 @@ def unregister():
 
     # bpy.app.handlers.load_post.append(end_handler)
 
+    
+    auto_enable_disable(reverse = False)
     bpy.ops.addons_helper.pickle(action = "EXPORT")
     # bpy.ops.addons_helper.switch(action = "DISABLE", auto_enable = True)
 

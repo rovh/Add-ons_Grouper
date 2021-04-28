@@ -423,6 +423,8 @@ class Addons_List_Collection(PropertyGroup):
 
     index_from_group: IntProperty()
 
+    name: StringProperty()
+
    
 
 
