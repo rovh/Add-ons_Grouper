@@ -489,11 +489,12 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
                 row_left.alignment = "LEFT"
                 row_left.operator("addons_list.list_action_add", icon="FILE_NEW", text = "Add Add-on").group_index = index
                 row_left.scale_x = .9
-                count = 0
-                for element in wm.addons_list:
-                    if element.index_from_group == index:
-                        count += 1
-                row_left.label(text = "Amt : " + str(count)  )
+                # count = 0
+                # for element in wm.addons_list:
+                #     if element.index_from_group == index:
+                #         count += 1
+                # row_left.label(text = "Amt : " + str(count)  )
+                row_left.label(text = "Amt : " + str(item_is_enabled_count + item_is_disabled_count)  )
 
 
                 row_right =  row.row(align = 1)
