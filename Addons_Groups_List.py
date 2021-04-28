@@ -243,8 +243,8 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
         # split.operator("addons_list.list_move", icon= "NONE", text = " ", depress = 0).group_index = index
 
         row = first_row.row(align = 1)
-        depress = True if index == wm.addons_groups_list_index else False
-        ico = "PLAY" if index == wm.addons_groups_list_index else "NONE"
+        depress = True if index == wm.addons_groups_list_index and item.show == True else False
+        ico = "PLAY" if index == wm.addons_groups_list_index and item.show == True else "NONE"
         row.operator("addons_list.list_move", icon= ico, text = tex, depress = depress).group_index = index
         # row.alignment = "LEFT"
         # row.alignment = "CENTER"
@@ -267,7 +267,7 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
 
         if index == wm.addons_groups_list_index:
             row_left.operator("addons_list.list_move", icon= "NONE", text = " ", depress = 0).group_index = index
-            row_center.operator("addons_list.list_move", icon=item.symbols, text = item.name, depress = 1).group_index = index
+            row_center.operator("addons_list.list_move", icon=item.symbols, text = item.name, depress = depress).group_index = index
             row_right.operator("addons_list.list_move", icon= "NONE", text = " ", depress = 0).group_index = index
         else:
             row_left.operator("addons_list.list_move", icon= "NONE", text = " ", depress = 0).group_index = index
@@ -317,263 +317,269 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
 
         else:
 
+            if item.show == True:
 
 
-
-            main_box = first_column.box()
-            main_box = main_box.box()
-            main_column = main_box.column(align = 1)
-
-
-
-
-
-            # main_column.separator(factor = 1)
+                main_box = first_column.box()
+                main_box = main_box.box()
+                main_column = main_box.column(align = 1)
 
 
 
 
-            # right_row = main_column.row(align = 1)
-            # right_row.scale_y = 1
 
-            # right_row_left = right_row.row(align = 1)
-            # right_row_left.scale_x = 1.4
-            # right_row_left.operator("addons_helper.open_browser_or_folder", text = "", icon = "URL", emboss = 1).link = item.link_text
-            
-            # right_row_right = right_row.row(align = 1)
-            # right_row_right.scale_x = .5
-            # right_row_right.prop(item, "link_text", emboss=1, text = "")
-
-
-
-            main_column.separator(factor = 1.5)
+                # main_column.separator(factor = 1)
 
 
 
 
-            
+                # right_row = main_column.row(align = 1)
+                # right_row.scale_y = 1
 
-            # right_row_left = right_row.row(align = 1)
-            # right_row_left.scale_x = 1.4
-            # right_row_left.operator("addons_helper.open_browser_or_folder", text = "", icon = "FILEBROWSER", emboss = 1).link = item.addon_link
-            
-            
-                        
+                # right_row_left = right_row.row(align = 1)
+                # right_row_left.scale_x = 1.4
+                # right_row_left.operator("addons_helper.open_browser_or_folder", text = "", icon = "URL", emboss = 1).link = item.link_text
+                
+                # right_row_right = right_row.row(align = 1)
+                # right_row_right.scale_x = .5
+                # right_row_right.prop(item, "link_text", emboss=1, text = "")
 
-            
-
-            # main_column.separator(factor = 1.5)
-
-            
-
-            
-            item_is_enabled_count, item_is_disabled_count = count_enabled_and_disabled(index)
-            
-
-            main_row = main_column.row(align = 0)
-
-            row = main_row.row(align = 1)
-            # row.scale_x = 1.1
-            row.label(icon = "QUIT", text = "")
-            depress = True if item.auto_enable == True else False
-            row.operator("addons_helper.auto_enable_disable_list", icon="CHECKMARK", text = "", depress = depress).group_index__and__action = str(index) + "_" + "enable"
-            depress = True if item.auto_disable == True else False
-            row.operator("addons_helper.auto_enable_disable_list", icon="CHECKBOX_DEHLT", text = "", depress = depress).group_index__and__action = str(index) + "_" + "disable"
-            row.alignment = "LEFT"
-
-            row = main_row.row(align = 0)
-
-            if item_is_enabled_count == 0:
-                row.operator("addons_helper.switch", icon="CHECKMARK", text = "Enable All").group_index__and__action = str(index) + "_ENABLE"
-            elif item_is_disabled_count == 0:
-                row.operator("addons_helper.switch", icon="CHECKBOX_DEHLT", text = "Disable All").group_index__and__action = str(index) + "_DISABLE"
-            else:
-                row.operator("addons_helper.switch", icon="CHECKBOX_DEHLT", text = "Disable All").group_index__and__action = str(index) + "_DISABLE"
-                row.operator("addons_helper.switch", icon="CHECKMARK", text = "Enable All").group_index__and__action = str(index) + "_ENABLE"
-            
-
-            row.scale_x = .5
-            row.scale_y = 1.3
-            row.alignment = "CENTER"
-            
-        
-            row = main_row.row(align = 0)
-       
-            row.label(icon = "BLANK1")
-            row.prop(item, "show_parameters", emboss=1, text = "", icon = "OUTLINER_DATA_GP_LAYER")
-            row.alignment = "RIGHT"
-            
-            
-
-
-            main_column.separator(factor = 2)
-
-            
-
-
-            if item.show_parameters == True:
-
-                main_column.separator(factor = 1)
-
-                box = main_column.box()
-
-                row = box.row()
-                row_left = row.row(align = 1)
-                row_left.alignment = "LEFT"
-                row_left.label(icon = "OUTLINER_OB_FONT", text = "Add-ons Group Name:")
-                row.prop(item, "name", emboss=1, text = "")
 
 
                 main_column.separator(factor = 1.5)
 
 
 
-            # row = main_column.row(align = 1)
-            # row_left = row.row(align = 1)
-            # row_left.alignment = "LEFT"
-            # row_left.label(icon = "HELP")
-            # row_left.label(text = " Description:")
 
+                
 
-            # row = row.row(align = 1)
-            # row.prop(item, "description", emboss=1, text = "")
+                # right_row_left = right_row.row(align = 1)
+                # right_row_left.scale_x = 1.4
+                # right_row_left.operator("addons_helper.open_browser_or_folder", text = "", icon = "FILEBROWSER", emboss = 1).link = item.addon_link
+                
+                
+                            
 
-            # row = main_column.row(align = 1)
-            # row.prop(item, "description_2", emboss=1, text = "")
-
-            # row = main_column.row(align = 1)
-            # row.prop(item, "description_3", emboss=1, text = "")
-
-
-                main_column.separator(factor = 1.5)
-
-
-                row = box.row(align = 1)
-                row_left = row.row(align = 1)
-                row_left.alignment = "LEFT"
-                row_left.label(icon = "BLENDER")
-                row_left.label(text = " Label:")
-                row_left.prop(item, 'symbols', expand = True)
-
-
+                
 
                 # main_column.separator(factor = 1.5)
 
+                
 
+                
+                item_is_enabled_count, item_is_disabled_count = count_enabled_and_disabled(index)
+                
 
-            # right_row = main_column.row(align = 1)
+                main_row = main_column.row(align = 0)
 
+                row = main_row.row(align = 1)
+                # row.scale_x = 1.1
+                row.label(icon = "QUIT", text = "")
+                depress = True if item.auto_enable == True else False
+                row.operator("addons_helper.auto_enable_disable_list", icon="CHECKMARK", text = "", depress = depress).group_index__and__action = str(index) + "_" + "enable"
+                depress = True if item.auto_disable == True else False
+                row.operator("addons_helper.auto_enable_disable_list", icon="CHECKBOX_DEHLT", text = "", depress = depress).group_index__and__action = str(index) + "_" + "disable"
+                row.alignment = "LEFT"
 
-            # t = text_function(item.addon_link)
+                row = main_row.row(align = 0)
 
-            # right_row_right = right_row.row(align = 1)
-            # right_row_right.scale_x = .5
-            # right_row_right.label(text = t)
-            # right_row_right.prop(item, "addon_link", emboss=1, text = "")
+                if item_is_enabled_count == 0:
+                    row.operator("addons_helper.switch", icon="CHECKMARK", text = "Enable All").group_index__and__action = str(index) + "_ENABLE"
+                elif item_is_disabled_count == 0:
+                    row.operator("addons_helper.switch", icon="CHECKBOX_DEHLT", text = "Disable All").group_index__and__action = str(index) + "_DISABLE"
+                else:
+                    row.operator("addons_helper.switch", icon="CHECKBOX_DEHLT", text = "Disable All").group_index__and__action = str(index) + "_DISABLE"
+                    row.operator("addons_helper.switch", icon="CHECKMARK", text = "Enable All").group_index__and__action = str(index) + "_ENABLE"
+                
 
-
-
-            main_column.separator(factor = 2)
-
-            row = main_column.row()
-            scale = 1.1
-            row.scale_x = scale
-            row.scale_y = scale
-
-            row_left = row.row()
-            row_left.alignment = "LEFT"
-            row_left.operator("addons_list.list_action_add", icon="FILE_NEW", text = "Add Add-on").group_index = index
+                row.scale_x = .5
+                row.scale_y = 1.3
+                row.alignment = "CENTER"
+                
             
-
-
-            row_right =  row.row(align = 1)
-            row_right.alignment = "RIGHT"
-
-
-            row_right.operator("addons_list.find", icon="VIEWZOOM", text = "")
-
-
-            row_right.separator(factor = 1)
-            
-            row_right.operator("addons_list.list_action", icon="TRIA_UP", text = "").action = "UP"
-            row_right.operator("addons_list.list_action", icon="TRIA_DOWN", text = "").action = "DOWN"
-
-            row_right.separator(factor = 3.5)
-
-            row_right.operator("addons_list.list_action_remove", icon="PANEL_CLOSE", text = "").group_index = index
-
-
-            rows = 2
-            wm = context.window_manager
-            main_column.template_list("ADDONS_LIST_UL_items", "", wm, "addons_list", wm, "addons_list_index", rows=rows)
-
-
-            if len(wm.addons_groups_list)-1 != index:
-                first_column.separator(factor = 8)
-            
-            first_column.separator(factor = 1)
-
-
-
-            # main_box.separator(factor = 1)
-            # first_column.separator(factor = 8)
-
-            # main_column.separator(factor = 3)
-            # row = main_column.row()
-            # row.scale_y = .5
-            # row.alignment = "CENTER"
-            # split = row.split()
-            # split.label(icon = "BLANK1")
-            # for _ in range(10):
-            #     split.label(text = "_____________")
-            
-
-
-
-        # left_row.scale_x = .3
-
-        # row.scale_y = 2
-
-        # column_main = layout.column(align = 1)
-        # box = column_main.box()
-        # column = box.column(align = 1)
-        # row_header = column.row(align = 1)
-        # row_header.scale_y = .8
-
-
-        # if bpy.context.scene.addons_groups_list[index].bool == True:
-        #     row_info = row_header.row(align = 1)
-        #     row_info.operator("addons_groups_list.list_action_bool", text = "", icon = "CHECKBOX_DEHLT", emboss = 0).my_index = index
-        #     row_info.alignment = 'RIGHT'
-
-        #     # row_info = row_header.row(align = 1)
-        #     # row_info.operator("addons_groups_list.list_action_bool", text = "", icon = "SHADING_SOLID", emboss = 0).my_index = index
-        #     # row_info.alignment = 'CENTER'
-        # else:
-        #     row_info = row_header.row(align = 1)
-        #     row_info.operator("addons_groups_list.list_action_bool", text = "", icon = "BOOKMARKS", emboss = 0).my_index = index
-        #     row_info.alignment = 'LEFT'
-
-        # if item.text.count("\n") > 0:
-        #     multiple_strokes = True
-        # else:
-        #     multiple_strokes = False
-
-
-        # if multiple_strokes == True:
-        #     text_parts_list = item.text.split('\n')
-        #     # self.draw_text(text_parts_list)
-        #     column.separator(factor=.5)
-        #     col = column
-        #     for i in text_parts_list:
-        #         row = col.row(align = 1)
-        #         row.label(text = i)
-        #         row.scale_y = 0
-        # else:
-        #     column.separator(factor=.6)
-        #     column.prop(item, "text", emboss=1, text = "")
+                row = main_row.row(align = 0)
         
-        # column_main.separator(factor=1.1)
+                row.label(icon = "BLANK1")
+                row.prop(item, "show_parameters", emboss=1, text = "", icon = "OUTLINER_DATA_GP_LAYER")
+                row.alignment = "RIGHT"
+                
+                
+
+
+                main_column.separator(factor = 2)
+
+                
+
+
+                if item.show_parameters == True:
+
+                    main_column.separator(factor = 1)
+
+                    box = main_column.box()
+
+                    row = box.row()
+                    row_left = row.row(align = 1)
+                    row_left.alignment = "LEFT"
+                    row_left.label(icon = "OUTLINER_OB_FONT", text = "Add-ons Group Name:")
+                    row.prop(item, "name", emboss=1, text = "")
+
+
+                    main_column.separator(factor = 1.5)
+
+
+
+                # row = main_column.row(align = 1)
+                # row_left = row.row(align = 1)
+                # row_left.alignment = "LEFT"
+                # row_left.label(icon = "HELP")
+                # row_left.label(text = " Description:")
+
+
+                # row = row.row(align = 1)
+                # row.prop(item, "description", emboss=1, text = "")
+
+                # row = main_column.row(align = 1)
+                # row.prop(item, "description_2", emboss=1, text = "")
+
+                # row = main_column.row(align = 1)
+                # row.prop(item, "description_3", emboss=1, text = "")
+
+
+                    main_column.separator(factor = 1.5)
+
+
+                    row = box.row(align = 1)
+                    row_left = row.row(align = 1)
+                    row_left.alignment = "LEFT"
+                    row_left.label(icon = "BLENDER")
+                    row_left.label(text = " Label:")
+                    row_left.prop(item, 'symbols', expand = True)
+
+
+
+                    # main_column.separator(factor = 1.5)
+
+
+
+                # right_row = main_column.row(align = 1)
+
+
+                # t = text_function(item.addon_link)
+
+                # right_row_right = right_row.row(align = 1)
+                # right_row_right.scale_x = .5
+                # right_row_right.label(text = t)
+                # right_row_right.prop(item, "addon_link", emboss=1, text = "")
+
+
+
+                main_column.separator(factor = 2)
+
+                row = main_column.row()
+                scale = 1.1
+                row.scale_x = scale
+                row.scale_y = scale
+
+                row_left = row.row()
+                row_left.alignment = "LEFT"
+                row_left.operator("addons_list.list_action_add", icon="FILE_NEW", text = "Add Add-on").group_index = index
+                row_left.scale_x = .9
+                count = 0
+                for element in wm.addons_list:
+                    if element.index_from_group == index:
+                        count += 1
+                row_left.label(text = "Amt : " + str(count)  )
+
+
+                row_right =  row.row(align = 1)
+                row_right.alignment = "RIGHT"
+
+
+                row_right.operator("addons_list.find", icon="VIEWZOOM", text = "")
+
+
+                row_right.separator(factor = 1)
+                
+                row_right.operator("addons_list.list_action", icon="TRIA_UP", text = "").action = "UP"
+                row_right.operator("addons_list.list_action", icon="TRIA_DOWN", text = "").action = "DOWN"
+
+                row_right.separator(factor = 3.5)
+
+                row_right.operator("addons_list.list_action_remove", icon="PANEL_CLOSE", text = "").group_index = index
+
+
+                rows = 2
+                wm = context.window_manager
+                main_column.template_list("ADDONS_LIST_UL_items", "", wm, "addons_list", wm, "addons_list_index", rows=rows)
+
+
+                if len(wm.addons_groups_list)-1 != index:
+                    first_column.separator(factor = 7)
+                
+
+            first_column.separator(factor = 2)
+
+
+
+                # main_box.separator(factor = 1)
+                # first_column.separator(factor = 8)
+
+                # main_column.separator(factor = 3)
+                # row = main_column.row()
+                # row.scale_y = .5
+                # row.alignment = "CENTER"
+                # split = row.split()
+                # split.label(icon = "BLANK1")
+                # for _ in range(10):
+                #     split.label(text = "_____________")
+                
+
+
+
+            # left_row.scale_x = .3
+
+            # row.scale_y = 2
+
+            # column_main = layout.column(align = 1)
+            # box = column_main.box()
+            # column = box.column(align = 1)
+            # row_header = column.row(align = 1)
+            # row_header.scale_y = .8
+
+
+            # if bpy.context.scene.addons_groups_list[index].bool == True:
+            #     row_info = row_header.row(align = 1)
+            #     row_info.operator("addons_groups_list.list_action_bool", text = "", icon = "CHECKBOX_DEHLT", emboss = 0).my_index = index
+            #     row_info.alignment = 'RIGHT'
+
+            #     # row_info = row_header.row(align = 1)
+            #     # row_info.operator("addons_groups_list.list_action_bool", text = "", icon = "SHADING_SOLID", emboss = 0).my_index = index
+            #     # row_info.alignment = 'CENTER'
+            # else:
+            #     row_info = row_header.row(align = 1)
+            #     row_info.operator("addons_groups_list.list_action_bool", text = "", icon = "BOOKMARKS", emboss = 0).my_index = index
+            #     row_info.alignment = 'LEFT'
+
+            # if item.text.count("\n") > 0:
+            #     multiple_strokes = True
+            # else:
+            #     multiple_strokes = False
+
+
+            # if multiple_strokes == True:
+            #     text_parts_list = item.text.split('\n')
+            #     # self.draw_text(text_parts_list)
+            #     column.separator(factor=.5)
+            #     col = column
+            #     for i in text_parts_list:
+            #         row = col.row(align = 1)
+            #         row.label(text = i)
+            #         row.scale_y = 0
+            # else:
+            #     column.separator(factor=.6)
+            #     column.prop(item, "text", emboss=1, text = "")
+            
+            # column_main.separator(factor=1.1)
 
 
 
@@ -582,10 +588,13 @@ class Notes_List_Collection(PropertyGroup):
 
 
     # addons_list: CollectionProperty(type=Addons_List_Collection)
+    
+    show: BoolProperty()
 
     show_parameters: BoolProperty()
 
     text: StringProperty()
+
     addon_link: StringProperty()
 
     ico_name: StringProperty(default = "BLANK1")

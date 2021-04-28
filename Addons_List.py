@@ -116,10 +116,22 @@ class Addons_List_list_move(Operator):
         scene = context.scene
         wm = context.window_manager
 
-        wm.addons_groups_list_index = self.group_index
+        if wm.addons_groups_list_index == self.group_index:
+            if wm.addons_groups_list[self.group_index].show == True:
+                wm.addons_groups_list[self.group_index].show = False
+            else:
+                wm.addons_groups_list[self.group_index].show = True
+        else:
+            wm.addons_groups_list_index = self.group_index
+            wm.addons_groups_list[self.group_index].show = True
+
+        
+
+
 
         for index, element in enumerate(wm.addons_list):
             if element.index_from_group != self.group_index:
+
 
                 for i in range(    index + 1,    len(wm.addons_list)   ):
                     if wm.addons_list[i].index_from_group == self.group_index:
