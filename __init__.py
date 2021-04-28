@@ -14,7 +14,7 @@
 bl_info = {
     "name" : "Add-ons Grouper",
     "author" : "Rovh",
-    "description" : "",
+    "description" : "Add-ons Grouper is an add-on created to simplify and extend the management of add-ons by creating add-ons groups and using additional options.",
     "blender" : (3, 0, 0),
     "version" : (1,0),
     "location" : "",
@@ -45,9 +45,9 @@ from .Addons_List import *
 
 
 
-custom_scene_name = ".Addons_Helper_Data"
+custom_scene_name = ".Addons_Grouper_Data"
 
-class Addons_Helper_Preferences (AddonPreferences):
+class Addons_Grouper_Preferences (AddonPreferences):
  
     bl_idname = __name__
 
@@ -70,7 +70,7 @@ class Addons_Helper_Preferences (AddonPreferences):
 
         rows = 2
         row = layout.row()
-        row.template_list("ADDONS_GROUPER_LIST_UL_items", "", wm, "addons_groups_list", wm, "addons_groups_list_index", rows=rows)
+        row.template_list("ADDONS_GROUPS_LIST_UL_items", "", wm, "addons_groups_list", wm, "addons_groups_list_index", rows=rows)
 
         col = row.column(align=True)
         col.scale_x = 1.1
@@ -102,47 +102,15 @@ class Addons_Helper_Preferences (AddonPreferences):
 
         col.separator(factor = 4)
 
-        col.operator("addons_helper.pickle", icon='FILE_REFRESH', text="").action = "IMPORT"
+        col.operator("addons_grouper.pickle", icon='FILE_REFRESH', text="").action = "IMPORT"
         # row = layout.row()
         # col = row.column(align=True)
         # row = col.row(align=True)
         # row.operator("presets_angle.remove_duplicates", icon="GHOST_ENABLED")
 
-class Addons_Helper_Bool(Operator):
-    """Tooltip"""
-    bl_idname = "window_manager.bool"
-    bl_label = ""
-    bl_description = 'Display Noter Splash Screen on startup \n\n You can also assign shortcut \n How to do it: > right-click on this button > Assign Shortcut'
-    # bl_options = {'REGISTER', 'UNDO'}
-    bl_options = {'UNDO'}
-
-    
-    def execute(self, context):
-
-        if bpy.data.scenes.find(custom_scene_name) == -1:
-            bpy.data.scenes.new(custom_scene_name)
-
-
-        if bpy.data.scenes[custom_scene_name].splash_screen == True:
-            bpy.data.scenes[custom_scene_name].splash_screen = False
-        else:
-            bpy.data.scenes[custom_scene_name].splash_screen = True
-
-            
-                
-        
-        # if bpy.context.scene.splash_screen == True:
-        #     for i in bpy.data.scenes:
-        #         i.splash_screen = False
-        # else:
-        #     for i in bpy.data.scenes:
-        #         i.splash_screen = True
-
-        return {'FINISHED'}
-
-class Addons_Helper_Open_Browser_Or_Folder(Operator):
+class Addons_Grouper_Open_Browser_Or_Folder(Operator):
     """Move items up and down, add and remove"""
-    bl_idname = "addons_helper.open_browser_or_folder"
+    bl_idname = "addons_grouper.open_browser_or_folder"
     bl_label = ""
     bl_description = "open browser or folder"
     bl_options = {'REGISTER'}
@@ -155,11 +123,10 @@ class Addons_Helper_Open_Browser_Or_Folder(Operator):
 
         return {"FINISHED"}
 
-class Addons_Helper_Switch(Operator):
-    """Move items up and down, add and remove"""
-    bl_idname = "addons_helper.switch"
+class Addons_Grouper_Switch(Operator):
+    bl_idname = "addons_grouper.switch"
     bl_label = ""
-    bl_description = "open browser or folder"
+    bl_description = "Enable or Disable All Add-ons in this group"
     bl_options = {'REGISTER'}
 
     group_index: IntProperty()
@@ -279,11 +246,10 @@ class Addons_Helper_Switch(Operator):
 
         return {"FINISHED"}
 
-class Addons_Helper_Pickle(Operator):
-    """Clear all items of the list"""
-    bl_idname = "addons_helper.pickle"
-    bl_label = "Remove"
-    bl_description = "Pickle"
+class Addons_Grouper_Pickle(Operator):
+    bl_idname = "addons_grouper.pickle"
+    bl_label = ""
+    bl_description = "Import or Export Data"
     bl_options = {'INTERNAL'}
 
     action: bpy.props.EnumProperty(
@@ -426,16 +392,30 @@ def finding(sufix, place_name, enable):
             bpy.data.scenes[custom_scene_name][x] = ""
 
 
-class Addons_Helper_List_auto_enable_disable_list(Operator):
-    """Move items up and down, add and remove"""
-    bl_idname = "addons_helper.auto_enable_disable_list"
+class Addons_Grouper_List_auto_enable_disable_list(Operator):
+    bl_idname = "addons_grouper.auto_enable_disable_list"
     bl_label = ""
-    bl_description = "Checkmark"
+    bl_description = ""
     bl_options = {'REGISTER'}
 
     group_index: IntProperty()
 
     group_index__and__action: StringProperty()
+
+    @classmethod
+    def description(cls, context, properties):
+
+        keyword = "_"
+        _, _, after_keyword = properties.group_index__and__action.partition(keyword)
+
+        if after_keyword == 'enable':
+            return "Enable add-ons from this group when you start Blender\
+                    \nand disable when you close Blender"
+
+        elif after_keyword == 'disable':
+            return "Disable add-ons from this group when you start Blender \
+                    \nand enable when you close Blender"
+
 
     def execute(self, context):
 
@@ -608,9 +588,9 @@ class Addons_Helper_List_auto_enable_disable_list(Operator):
         return {"FINISHED"}
 
 
-# class Addons_Helper_(Operator):
+# class Addons_Grouper_(Operator):
 #     """Move items up and down, add and remove"""
-#     bl_idname = "addons_helper.open_browser_or_folder"
+#     bl_idname = "addons_grouper.open_browser_or_folder"
 #     bl_label = ""
 #     bl_description = "open browser or folder"
 #     bl_options = {'REGISTER'}
@@ -623,8 +603,8 @@ class Addons_Helper_List_auto_enable_disable_list(Operator):
 
 #         return {"FINISHED"}
 
-# bpy.ops.addons_helper.switch(auto_enable_disable = True, action = "ENABLE", auto_enable_disable_list = bpy.data.scenes['.Addons_Helper_Data'].auto_enable_list)
-# bpy.ops.addons_helper.switch(auto_enable_disable = True, action = "DISABLE", auto_enable_disable_list = bpy.data.scenes['.Addons_Helper_Data'].auto_disable_list)
+# bpy.ops.addons_grouper.switch(auto_enable_disable = True, action = "ENABLE", auto_enable_disable_list = bpy.data.scenes['.Addons_Grouper_Data'].auto_enable_list)
+# bpy.ops.addons_grouper.switch(auto_enable_disable = True, action = "DISABLE", auto_enable_disable_list = bpy.data.scenes['.Addons_Grouper_Data'].auto_disable_list)
 
 def auto_enable_disable( reverse = False):
     if  bpy.data.scenes.find(custom_scene_name) != -1:
@@ -636,19 +616,19 @@ def auto_enable_disable( reverse = False):
 
             action = "ENABLE" if reverse == False else "DISABLE"
 
-            bpy.ops.addons_helper.switch(auto_enable_disable = True, action = action, auto_enable_disable_list = auto_enable_list)
+            bpy.ops.addons_grouper.switch(auto_enable_disable = True, action = action, auto_enable_disable_list = auto_enable_list)
 
         if bool(auto_disable_list) == True:
 
             action = "DISABLE" if reverse == False else "ENABLE"
 
-            bpy.ops.addons_helper.switch(auto_enable_disable = True, action = action, auto_enable_disable_list = auto_disable_list)
+            bpy.ops.addons_grouper.switch(auto_enable_disable = True, action = action, auto_enable_disable_list = auto_disable_list)
 
 @persistent
 def load_handler(dummy):
 
     try:
-        bpy.ops.addons_helper.pickle(action = "IMPORT")
+        bpy.ops.addons_grouper.pickle(action = "IMPORT")
     except RuntimeError:
         pass
 
@@ -660,7 +640,7 @@ def load_handler(dummy):
 # def end_handler(dummy):
 
 #     try:
-#         bpy.ops.addons_helper.pickle(action = "EXPORT")
+#         bpy.ops.addons_grouper.pickle(action = "EXPORT")
 #     except RuntimeError:
 #         pass
 
@@ -671,12 +651,11 @@ def load_handler(dummy):
 
 blender_classes = [
 
-    Addons_Helper_Preferences,
-    Addons_Helper_Bool,
-    Addons_Helper_Open_Browser_Or_Folder,
-    Addons_Helper_Switch,
-    Addons_Helper_Pickle,
-    Addons_Helper_List_auto_enable_disable_list,
+    Addons_Grouper_Preferences,
+    Addons_Grouper_Open_Browser_Or_Folder,
+    Addons_Grouper_Switch,
+    Addons_Grouper_Pickle,
+    Addons_Grouper_List_auto_enable_disable_list,
 ]
 
 blender_classes = \
@@ -693,33 +672,33 @@ def register():
     bpy.types.Scene.auto_enable_list = StringProperty()
     bpy.types.Scene.auto_disable_list = StringProperty()
 
-    bpy.types.WindowManager.addons_groups_list = CollectionProperty(type=Notes_List_Collection)
-    bpy.types.WindowManager.addons_groups_list_index = IntProperty()
+    bpy.types.WindowManager.addons_groups_list = CollectionProperty(type=Addons_Groups_List_Collection)
+    bpy.types.WindowManager.addons_groups_list_index = IntProperty(name = "Add-on")
 
     bpy.types.WindowManager.addons_list = CollectionProperty(type=Addons_List_Collection)
-    bpy.types.WindowManager.addons_list_index = IntProperty()
+    bpy.types.WindowManager.addons_list_index = IntProperty(name = "Add-on")
 
-    # bpy.ops.addons_helper.pickle('IMPORT', "INVOKE_DEFAULT")
-    # bpy.ops.addons_helper.pickle("INVOKE_DEFAULT")
+    # bpy.ops.addons_grouper.pickle('IMPORT', "INVOKE_DEFAULT")
+    # bpy.ops.addons_grouper.pickle("INVOKE_DEFAULT")
 
     # pickle_action(action = "IMPORT")
 
 
     bpy.app.handlers.load_post.append(load_handler)
 
-    # bpy.ops.addons_helper.pickle(action = "IMPORT")
+    # bpy.ops.addons_grouper.pickle(action = "IMPORT")
 
 def unregister():
 
     # pickle_action(action = "EXPORT")
-    # bpy.ops.addons_helper.pickle('EXPORT', "INVOKE_DEFAULT")
+    # bpy.ops.addons_grouper.pickle('EXPORT', "INVOKE_DEFAULT")
 
     # bpy.app.handlers.load_post.append(end_handler)
 
     
-    # auto_enable_disable(reverse = True)
-    bpy.ops.addons_helper.pickle(action = "EXPORT")
-    # bpy.ops.addons_helper.switch(action = "DISABLE", auto_enable = True)
+    auto_enable_disable(reverse = True)
+    bpy.ops.addons_grouper.pickle(action = "EXPORT")
+    # bpy.ops.addons_grouper.switch(action = "DISABLE", auto_enable = True)
 
     if load_handler in bpy.app.handlers.load_post:
         bpy.app.handlers.load_post.remove(load_handler)

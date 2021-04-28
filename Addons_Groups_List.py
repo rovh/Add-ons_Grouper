@@ -24,10 +24,10 @@ from .Addons_List import *
 
 
 
-custom_scene_name = ".Addons_Helper_Data"
+custom_scene_name = ".Addons_Groups_Data"
 
 
-class Addons_Helper_List_actions(Operator):
+class Addons_Groups_List_actions(Operator):
     """Move items up and down, add and remove"""
     bl_idname = "addons_groups_list.list_action"
     bl_label = ""
@@ -45,9 +45,11 @@ class Addons_Helper_List_actions(Operator):
     @classmethod
     def description(cls, context, properties):
         if properties.action == 'UP':
-            return "Up"
+            return "Up\
+                \nUp active element in the list"
         elif properties.action == 'DOWN':
-            return "Down"
+            return "Down\
+                \nDown active element in the list"
 
     def invoke(self, context, event):
 
@@ -107,11 +109,10 @@ class Addons_Helper_List_actions(Operator):
                 
 
         return {"FINISHED"}
-class Addons_Helper_List_actions_add(Operator):
-    """Move items up and down, add and remove"""
+class Addons_Groups_List_actions_add(Operator):
     bl_idname = "addons_groups_list.list_action_add"
-    bl_label = ""
-    bl_description = "Add item"
+    bl_label = "Add"
+    bl_description = "Add Group"
     bl_options = {'REGISTER'}
     # bl_options = {'BLOCKING'}
     # bl_options = {'INTERNAL'}
@@ -126,9 +127,9 @@ class Addons_Helper_List_actions_add(Operator):
     #     return context.window_manager.invoke_props_dialog(self)
 
 
-    @classmethod
-    def description(cls, context, properties):
-        return "Add"
+    # @classmethod
+    # def description(cls, context, properties):
+    #     return "Add"
 
     def execute(self, context):
 
@@ -146,11 +147,11 @@ class Addons_Helper_List_actions_add(Operator):
         wm.addons_groups_list_index = len(wm.addons_groups_list) - 1
 
         return {"FINISHED"}       
-class Addons_Helper_List_actions_remove(Operator):
+class Addons_Groups_List_actions_remove(Operator):
     """Clear all items of the list"""
     bl_idname = "addons_groups_list.list_action_remove"
     bl_label = "Remove"
-    bl_description = "Clear all items of the list"
+    bl_description = "Remove selected Group"
     bl_options = {'INTERNAL'}
 
     @classmethod
@@ -175,11 +176,11 @@ class Addons_Helper_List_actions_remove(Operator):
         wm.addons_groups_list.remove(idx)
 
         return {"FINISHED"}  
-class Addons_Helper_List_clearList(Operator):
+class Addons_Groups_List_clear(Operator):
     """Clear all items of the list"""
     bl_idname = "addons_groups_list.clear_list"
-    bl_label = "Clear List"
-    bl_description = "Clear all items of the list"
+    bl_label = "Clear"
+    bl_description = "Clear All Groups"
     bl_options = {'INTERNAL'}
 
     @classmethod
@@ -224,7 +225,7 @@ def count_enabled_and_disabled(group_index):
     return item_is_enabled_count, item_is_disabled_count
 
 
-class ADDONS_GROUPER_LIST_UL_items(UIList):
+class ADDONS_GROUPS_LIST_UL_items(UIList):
 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
 
@@ -343,7 +344,7 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
 
                 # right_row_left = right_row.row(align = 1)
                 # right_row_left.scale_x = 1.4
-                # right_row_left.operator("addons_helper.open_browser_or_folder", text = "", icon = "URL", emboss = 1).link = item.link_text
+                # right_row_left.operator("addons_grouper.open_browser_or_folder", text = "", icon = "URL", emboss = 1).link = item.link_text
                 
                 # right_row_right = right_row.row(align = 1)
                 # right_row_right.scale_x = .5
@@ -360,7 +361,7 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
 
                 # right_row_left = right_row.row(align = 1)
                 # right_row_left.scale_x = 1.4
-                # right_row_left.operator("addons_helper.open_browser_or_folder", text = "", icon = "FILEBROWSER", emboss = 1).link = item.addon_link
+                # right_row_left.operator("addons_grouper.open_browser_or_folder", text = "", icon = "FILEBROWSER", emboss = 1).link = item.addon_link
                 
                 
                             
@@ -381,21 +382,21 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
                 # row.scale_x = 1.1
                 row.label(icon = "QUIT", text = "")
                 depress = True if item.auto_enable == True else False
-                row.operator("addons_helper.auto_enable_disable_list", icon="CHECKMARK", text = "", depress = depress).group_index__and__action = str(index) + "_" + "enable"
+                row.operator("addons_grouper.auto_enable_disable_list", icon="CHECKMARK", text = "", depress = depress).group_index__and__action = str(index) + "_" + "enable"
                 depress = True if item.auto_disable == True else False
-                row.operator("addons_helper.auto_enable_disable_list", icon="CHECKBOX_DEHLT", text = "", depress = depress).group_index__and__action = str(index) + "_" + "disable"
+                row.operator("addons_grouper.auto_enable_disable_list", icon="CHECKBOX_DEHLT", text = "", depress = depress).group_index__and__action = str(index) + "_" + "disable"
                 row.alignment = "LEFT"
 
 
                 row = main_row.row(align = 0)
 
                 if item_is_enabled_count == 0:
-                    row.operator("addons_helper.switch", icon="CHECKMARK", text = "Enable All").group_index__and__action = str(index) + "_ENABLE"
+                    row.operator("addons_grouper.switch", icon="CHECKMARK", text = "Enable All").group_index__and__action = str(index) + "_ENABLE"
                 elif item_is_disabled_count == 0:
-                    row.operator("addons_helper.switch", icon="CHECKBOX_DEHLT", text = "Disable All").group_index__and__action = str(index) + "_DISABLE"
+                    row.operator("addons_grouper.switch", icon="CHECKBOX_DEHLT", text = "Disable All").group_index__and__action = str(index) + "_DISABLE"
                 else:
-                    row.operator("addons_helper.switch", icon="CHECKBOX_DEHLT", text = "Disable All").group_index__and__action = str(index) + "_DISABLE"
-                    row.operator("addons_helper.switch", icon="CHECKMARK", text = "Enable All").group_index__and__action = str(index) + "_ENABLE"
+                    row.operator("addons_grouper.switch", icon="CHECKBOX_DEHLT", text = "Disable All").group_index__and__action = str(index) + "_DISABLE"
+                    row.operator("addons_grouper.switch", icon="CHECKMARK", text = "Enable All").group_index__and__action = str(index) + "_ENABLE"
                 
 
                 row.scale_x = .5
@@ -588,17 +589,14 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
             
             # column_main.separator(factor=1.1)
 
-
-
-
-class Notes_List_Collection(PropertyGroup):
+class Addons_Groups_List_Collection(PropertyGroup):
 
 
     # addons_list: CollectionProperty(type=Addons_List_Collection)
     
     show: BoolProperty()
 
-    show_parameters: BoolProperty()
+    show_parameters: BoolProperty(name = "Show Parameters for this Group")
 
     text: StringProperty()
 
@@ -606,7 +604,7 @@ class Notes_List_Collection(PropertyGroup):
 
     ico_name: StringProperty(default = "BLANK1")
 
-    name: StringProperty(default = "-")
+    name: StringProperty(default = "-", name = "Group Name")
 
     auto_enable: BoolProperty(default = False)
 
@@ -636,25 +634,9 @@ class Notes_List_Collection(PropertyGroup):
 
     ]
 
-
     symbols_list = []
     for name in names_list:
         symbols_list.append(    (name,  "",  "" , name,  names_list.index(name)),       )
-
-    # symbols_list = [
-    #     ('LAYER_ACTIVE'         ,  "",  "" ,  "LAYER_ACTIVE",          1),
-    #     ('DISCLOSURE_TRI_RIGHT' ,  "",  "" ,  "DISCLOSURE_TRI_RIGHT",  2),
-    #     ('DISCLOSURE_TRI_DOWN'  ,  "",  "" ,  "DISCLOSURE_TRI_DOWN",   3),
-    #     ('TRIA_RIGHT'           ,  "",  "" ,  "TRIA_RIGHT",            4),
-    #     ('TRIA_DOWN'            ,  "",  "" ,  "TRIA_DOWN",             5),
-    #     ('RIGHTARROW'           ,  "",  "" ,  "RIGHTARROW",            6),
-    #     ('DOWNARROW_HLT'        ,  "",  "" ,  "DOWNARROW_HLT",         7),
-    #     ('KEYTYPE_KEYFRAME_VEC' ,  "",  "" ,  "KEYTYPE_KEYFRAME_VEC",  8),
-    #     ('KEYTYPE_BREAKDOWN_VEC',  "",  "" ,  "KEYTYPE_BREAKDOWN_VEC", 9),
-    #     ('KEYTYPE_EXTREME_VEC'  ,  "",  "" ,  "KEYTYPE_EXTREME_VEC",   10),            
-    #     ('KEYFRAME_HLT'         ,  "",  "" ,  "KEYFRAME_HLT",          11), 
-    # ]
-
 
     symbols: EnumProperty(
         items=(
@@ -663,18 +645,18 @@ class Notes_List_Collection(PropertyGroup):
             
         ),
         default = 'LAYER_ACTIVE',
-        description = "The icon to be used instead of the sign",
-        name = "Line of text"
+        description = "The icon to be used for this group",
+        name = "Icon"
         )
 
 
 blender_classes_Addons_Groups_List = [
-    Notes_List_Collection,
+    Addons_Groups_List_Collection,
     
-    Addons_Helper_List_actions,
-    Addons_Helper_List_actions_add,
-    Addons_Helper_List_actions_remove,
-    ADDONS_GROUPER_LIST_UL_items,
-    Addons_Helper_List_clearList,
+    Addons_Groups_List_actions,
+    Addons_Groups_List_actions_add,
+    Addons_Groups_List_actions_remove,
+    ADDONS_GROUPS_LIST_UL_items,
+    Addons_Groups_List_clear,
     
 ]

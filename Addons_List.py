@@ -24,7 +24,7 @@ from . import __name__ as addon_name
 
 
 
-custom_scene_name = ".Addons_Helper_Data"
+custom_scene_name = ".Addons_Grouper_Data"
 
 def find_addon_name(input_text, module_name = False):
     'bpy.ops.preferences.addon_enable(module="space_view3d_3d_navigation")'
@@ -71,9 +71,11 @@ class Addons_List_actions(Operator):
     @classmethod
     def description(cls, context, properties):
         if properties.action == 'UP':
-            return "Up"
+            return "Up\
+                \nUp active element in the list"
         elif properties.action == 'DOWN':
-            return "Down"
+            return "Down\
+                \nDown active element in the list"
 
     def invoke(self, context, event):
 
@@ -100,8 +102,9 @@ class Addons_List_actions(Operator):
 class Addons_List_list_move(Operator):
     """Move items up and down, add and remove"""
     bl_idname = "addons_list.list_move"
-    bl_label = ""
-    bl_description = "Move items up and down or remove"
+    bl_label = "Select this group"
+    bl_description = "Select this group\
+                    \nTo deselect, click on it again"
     bl_options = {'REGISTER'}
 
     group_index: IntProperty()
@@ -166,14 +169,10 @@ class Addons_List_actions_add(Operator):
     """Move items up and down, add and remove"""
     bl_idname = "addons_list.list_action_add"
     bl_label = ""
-    bl_description = "Add item"
+    bl_description = "Add Add-on"
     bl_options = {'REGISTER'}
 
     group_index: IntProperty()
-
-    @classmethod
-    def description(cls, context, properties):
-        return "Add"
 
     def execute(self, context):
 
@@ -206,7 +205,7 @@ class Addons_List_actions_remove(Operator):
     """Clear all items of the list"""
     bl_idname = "addons_list.list_action_remove"
     bl_label = "Remove"
-    bl_description = "Clear all items of the list"
+    bl_description = "Remove selected add-on"
     bl_options = {'INTERNAL'}
 
     group_index: IntProperty()
@@ -247,8 +246,8 @@ class Addons_List_actions_remove(Operator):
 class Addons_List_find(Operator):
     """Clear all items of the list"""
     bl_idname = "addons_list.find"
-    bl_label = "Remove"
-    bl_description = "Find"
+    bl_label = "Find"
+    bl_description = "Find selected add-on in Blender Search"
     bl_options = {'INTERNAL'}
 
     module_name: StringProperty
@@ -414,16 +413,13 @@ class ADDONS_LIST_UL_items(UIList):
                 # label(text="%s: %s" % (info["category"], info["name"]))
 
 
-        
-
-
 class Addons_List_Collection(PropertyGroup):
 
-    text: StringProperty()
+    text: StringProperty( name = "Link to the Add-on")
 
     index_from_group: IntProperty()
 
-    name: StringProperty()
+    # name: StringProperty()
 
    
 
