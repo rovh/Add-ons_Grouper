@@ -390,8 +390,13 @@ class Addons_Helper_List_auto_enable(Operator):
 
         if action == "enable":
             x = 'auto_enable_list'
+            y = 'auto_enable'
         elif action == "disable":
             x = 'auto_disable_list'
+            y = 'auto_disable'
+
+
+        group_index = self.group_index
 
 
 
@@ -399,28 +404,50 @@ class Addons_Helper_List_auto_enable(Operator):
         if bpy.data.scenes.find(custom_scene_name) == -1:
             bpy.data.scenes.new(custom_scene_name)
 
+        try:
+            bpy.context.scene.addons_groups_list[group_index][y]
+        except KeyError:
+            if action == "enable":
+                bpy.context.scene.addons_groups_list[group_index][y] = bpy.context.scene.addons_groups_list[group_index].auto_enable
+            else:
+                bpy.context.scene.addons_groups_list[group_index][y] = bpy.context.scene.addons_groups_list[group_index].auto_disable
+            # print(000000000000000)
+
+        try:
+            bpy.data.scenes[custom_scene_name][x]
+        except KeyError:
+            if action == "enable":
+                bpy.data.scenes[custom_scene_name][x] = bpy.data.scenes[custom_scene_name].auto_enable_list
+            else:
+                bpy.data.scenes[custom_scene_name][x] = bpy.data.scenes[custom_scene_name].auto_disable_list
 
 
 
-        group_index = self.group_index
+
+       
+
+
+        print(bpy.context.scene.addons_groups_list[group_index][y])
+
+        if bpy.context.scene.addons_groups_list[group_index][y] == True:
+            bpy.context.scene.addons_groups_list[group_index][y] = False
+            enable = False
+            print(11111111111)
+        else:
+            bpy.context.scene.addons_groups_list[group_index][y] = True
+            enable = True
+            print(2222222222)
 
         
 
-        if bpy.context.scene.addons_groups_list[group_index].auto_enable == True:
-            bpy.context.scene.addons_groups_list[group_index].auto_enable = False
-            enable = False
-        else:
-            bpy.context.scene.addons_groups_list[group_index].auto_enable = True
-            enable = True
 
 
-
-        if bpy.context.scene.addons_groups_list[group_index].auto_enable == True:
-            bpy.context.scene.addons_groups_list[group_index].auto_enable = False
-            enable = False
-        else:
-            bpy.context.scene.addons_groups_list[group_index].auto_enable = True
-            enable = True
+        # if bpy.context.scene.addons_groups_list[group_index][y] == True:
+        #     bpy.context.scene.addons_groups_list[group_index][y] = False
+        #     enable = False
+        # else:
+        #     bpy.context.scene.addons_groups_list[group_index][y] = True
+        #     enable = True
 
 
 
@@ -456,9 +483,10 @@ class Addons_Helper_List_auto_enable(Operator):
        
 
 
-        print()
-        print()
-        print(bpy.data.scenes[custom_scene_name][x]) 
+        # print()
+        # print()
+        # print(x, y) 
+        # print(bpy.data.scenes[custom_scene_name][x]) 
         # print(split_list)
 
         
@@ -593,6 +621,7 @@ def register():
         bpy.utils.register_class(blender_class)
 
     bpy.types.Scene.auto_enable_list = StringProperty()
+    bpy.types.Scene.auto_disable_list = StringProperty()
 
     bpy.types.Scene.addons_groups_list = CollectionProperty(type=Notes_List_Collection)
     bpy.types.WindowManager.addons_groups_list_index = IntProperty()
@@ -632,6 +661,7 @@ def unregister():
     del bpy.types.WindowManager.addons_list_index
 
     del bpy.types.Scene.auto_enable_list
+    del bpy.types.Scene.auto_disable_list
     
 
 
