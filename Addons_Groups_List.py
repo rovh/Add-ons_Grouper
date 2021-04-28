@@ -470,7 +470,11 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
             wm = context.window_manager
             main_column.template_list("ADDONS_LIST_UL_items", "", wm, "addons_list", wm, "addons_list_index", rows=rows)
 
-            first_column.separator(factor = 9)
+
+            if len(wm.addons_groups_list)-1 != index:
+                first_column.separator(factor = 8)
+            
+            first_column.separator(factor = 1)
 
 
 
