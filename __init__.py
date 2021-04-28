@@ -70,7 +70,7 @@ class Addons_Helper_Preferences (AddonPreferences):
 
         rows = 2
         row = layout.row()
-        row.template_list("ADDONS_GROUPER_LIST_UL_items", "", scene, "addons_groups_list", wm, "addons_groups_list_index", rows=rows)
+        row.template_list("ADDONS_GROUPER_LIST_UL_items", "", wm, "addons_groups_list", wm, "addons_groups_list_index", rows=rows)
 
         col = row.column(align=True)
         col.scale_x = 1.1
@@ -169,6 +169,8 @@ class Addons_Helper_Switch(Operator):
 
     def execute(self, context):
 
+        wm = context.window_manager
+
 
         if self.auto_enable == True:
 
@@ -186,7 +188,7 @@ class Addons_Helper_Switch(Operator):
 
                 group_index = int(group_index)
 
-                for item in bpy.context.scene.addons_list:
+                for item in wm.addons_list:
 
                     if group_index == item.index_from_group:
 
@@ -222,7 +224,7 @@ class Addons_Helper_Switch(Operator):
             action = after_keyword
 
 
-            for item in bpy.context.scene.addons_list:
+            for item in wm.addons_list:
 
                 if item.index_from_group == self.group_index:
                     
@@ -270,10 +272,14 @@ class Addons_Helper_Pickle(Operator):
             ))
 
     def execute(self, context):
+
+        wm = context.window_manager
         
         # [   [('symbols', 0), ('name', '1111')],    [], [('name', '1111'), ('symbols', 3)]]
 
         if self.action == "IMPORT":
+
+            
 
 
 
@@ -283,12 +289,12 @@ class Addons_Helper_Pickle(Operator):
 
 
             length_data = len(data)
-            length_addons_helper_list = len(context.scene.addons_groups_list)
+            length_addons_helper_list = len(wm.addons_groups_list)
 
             if length_data > length_addons_helper_list:
                 length = length_data - length_addons_helper_list
                 for _ in range(length):
-                    context.scene.addons_groups_list.add()
+                    wm.addons_groups_list.add()
                 
 
 
@@ -304,7 +310,7 @@ class Addons_Helper_Pickle(Operator):
                         name = i[0]
                         value = i[1]
 
-                        bpy.context.scene.addons_groups_list[index][name] = value
+                        wm.addons_groups_list[index][name] = value
 
                         # print(name, value)
 
@@ -315,14 +321,14 @@ class Addons_Helper_Pickle(Operator):
                 data = pickle.load(f)
 
             length_data = len(data)
-            length_addons_list = len(context.scene.addons_list)
+            length_addons_list = len(wm.addons_list)
 
 
 
             if length_data > length_addons_list:
                 length = length_data - length_addons_list
                 for _ in range(length):
-                    context.scene.addons_list.add()
+                    wm.addons_list.add()
 
 
             for index, element in enumerate(data):
@@ -332,7 +338,7 @@ class Addons_Helper_Pickle(Operator):
                     name = i[0]
                     value = i[1]
 
-                    bpy.context.scene.addons_list[index][name] = value
+                    wm.addons_list[index][name] = value
 
                     # print(name, value)
         
@@ -345,7 +351,7 @@ class Addons_Helper_Pickle(Operator):
 
 
             data = []
-            for i in bpy.context.scene.addons_groups_list:
+            for i in wm.addons_groups_list:
                 data.append( i.items() )
             
 
@@ -355,7 +361,7 @@ class Addons_Helper_Pickle(Operator):
 
 
             data = []
-            for i in bpy.context.scene.addons_list:
+            for i in wm.addons_list:
                 data.append( i.items() )
 
             with open('saved_data_Addons_List.pickle', 'wb') as f:
@@ -412,6 +418,8 @@ class Addons_Helper_List_auto_enable_disable_list(Operator):
 
     def execute(self, context):
 
+        wm = context.window_manager
+
         keyword = "_"
 
         before_keyword, keyword, after_keyword = self.group_index__and__action.partition(keyword)
@@ -455,9 +463,9 @@ class Addons_Helper_List_auto_enable_disable_list(Operator):
 
         """auto_enable"""
         try:
-            bpy.context.scene.addons_groups_list[group_index][auto_enable]
+            wm.addons_groups_list[group_index][auto_enable]
         except KeyError:
-            bpy.context.scene.addons_groups_list[group_index][auto_enable] = bpy.context.scene.addons_groups_list[group_index].auto_enable
+            wm.addons_groups_list[group_index][auto_enable] = wm.addons_groups_list[group_index].auto_enable
 
 
         """auto_enable_list"""
@@ -469,9 +477,9 @@ class Addons_Helper_List_auto_enable_disable_list(Operator):
 
         """auto_disable"""
         try:
-            bpy.context.scene.addons_groups_list[group_index][auto_disable]
+            wm.addons_groups_list[group_index][auto_disable]
         except KeyError:
-            bpy.context.scene.addons_groups_list[group_index][auto_disable] = bpy.context.scene.addons_groups_list[group_index].auto_disable
+            wm.addons_groups_list[group_index][auto_disable] = wm.addons_groups_list[group_index].auto_disable
 
 
         """auto_disable_list"""
@@ -483,13 +491,13 @@ class Addons_Helper_List_auto_enable_disable_list(Operator):
 
 
 
-        if bpy.context.scene.addons_groups_list[group_index][y] == True:
-            bpy.context.scene.addons_groups_list[group_index][y] = False
+        if wm.addons_groups_list[group_index][y] == True:
+            wm.addons_groups_list[group_index][y] = False
             enable = False
 
-        elif bpy.context.scene.addons_groups_list[group_index][y] == False:
-            bpy.context.scene.addons_groups_list[group_index][y] = True
-            bpy.context.scene.addons_groups_list[group_index][y_2] = False
+        elif wm.addons_groups_list[group_index][y] == False:
+            wm.addons_groups_list[group_index][y] = True
+            wm.addons_groups_list[group_index][y_2] = False
             enable = True
     
 
@@ -603,7 +611,7 @@ def load_handler(dummy):
         pass
 
 
-    bpy.ops.addons_helper.switch(action = "ENABLE", auto_enable = True)
+    # bpy.ops.addons_helper.switch(action = "ENABLE", auto_enable = True)
 
 
     bpy.app.handlers.load_post.remove(load_handler)
@@ -645,10 +653,10 @@ def register():
     bpy.types.Scene.auto_enable_list = StringProperty()
     bpy.types.Scene.auto_disable_list = StringProperty()
 
-    bpy.types.Scene.addons_groups_list = CollectionProperty(type=Notes_List_Collection)
+    bpy.types.WindowManager.addons_groups_list = CollectionProperty(type=Notes_List_Collection)
     bpy.types.WindowManager.addons_groups_list_index = IntProperty()
 
-    bpy.types.Scene.addons_list = CollectionProperty(type=Addons_List_Collection)
+    bpy.types.WindowManager.addons_list = CollectionProperty(type=Addons_List_Collection)
     bpy.types.WindowManager.addons_list_index = IntProperty()
 
     # bpy.ops.addons_helper.pickle('IMPORT', "INVOKE_DEFAULT")
@@ -676,10 +684,10 @@ def unregister():
     for blender_class in blender_classes:
         bpy.utils.unregister_class(blender_class)
 
-    del bpy.types.Scene.addons_groups_list
+    del bpy.types.WindowManager.addons_groups_list
     del bpy.types.WindowManager.addons_groups_list_index
 
-    del bpy.types.Scene.addons_list
+    del bpy.types.WindowManager.addons_list
     del bpy.types.WindowManager.addons_list_index
 
     del bpy.types.Scene.auto_enable_list

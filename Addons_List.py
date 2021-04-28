@@ -87,12 +87,12 @@ class Addons_List_actions(Operator):
         except IndexError:
             pass
         else:
-            if self.action == 'DOWN' and idx < len(scene.addons_list) - 1:
-                scene.addons_list.move(idx, idx+1)
+            if self.action == 'DOWN' and idx < len(wm.addons_list) - 1:
+                wm.addons_list.move(idx, idx+1)
                 wm.addons_list_index += 1
 
             elif self.action == 'UP' and idx >= 1:
-                scene.addons_list.move(idx, idx-1)
+                wm.addons_list.move(idx, idx-1)
                 wm.addons_list_index -= 1
                 
 
@@ -118,15 +118,15 @@ class Addons_List_list_move(Operator):
 
         wm.addons_groups_list_index = self.group_index
 
-        for index, element in enumerate(scene.addons_list):
+        for index, element in enumerate(wm.addons_list):
             if element.index_from_group != self.group_index:
 
-                for i in range(    index + 1,    len(scene.addons_list)   ):
-                    if scene.addons_list[i].index_from_group == self.group_index:
+                for i in range(    index + 1,    len(wm.addons_list)   ):
+                    if wm.addons_list[i].index_from_group == self.group_index:
 
                         idx = i
 
-                        scene.addons_list.move(  idx, index )
+                        wm.addons_list.move(  idx, index )
 
                         
             else:
@@ -168,11 +168,11 @@ class Addons_List_actions_add(Operator):
         idx = wm.addons_list_index
 
         try:
-            item = scene.addons_list[idx]
+            item = wm.addons_list[idx]
         except IndexError:
             pass
 
-        item = scene.addons_list.add()
+        item = wm.addons_list.add()
 
         # scene.addons_list_index = len(scene.addons_list) - 1
 
@@ -198,16 +198,17 @@ class Addons_List_actions_remove(Operator):
 
     @classmethod
     def poll(cls, context):
-        return bool(context.scene.addons_list)
+        wm = context.window_manager
+        return bool(wm.addons_list)
                 
 
     def invoke(self, context, event):
 
-        # wm = context.window_manager
+        wm = context.window_manager
         scene = context.scene
         idx = scene.addons_list_index
         # idx = wm.addons_list_index
-        if scene.addons_list[idx].index_from_group == self.group_index:
+        if wm.addons_list[idx].index_from_group == self.group_index:
             return context.window_manager.invoke_confirm(self, event)
         else:
             return {"FINISHED"}  
@@ -225,7 +226,7 @@ class Addons_List_actions_remove(Operator):
         else:
             wm.addons_list_index -= 1
         
-        scene.addons_list.remove(idx)
+        wm.addons_list.remove(idx)
 
         return {"FINISHED"}  
 class Addons_List_find(Operator):
@@ -246,7 +247,7 @@ class Addons_List_find(Operator):
         idx = wm.addons_list_index
 
         try:
-            item = scene.addons_list[idx]
+            item = wm.addons_list[idx]
         except IndexError:
             pass
 
@@ -267,7 +268,7 @@ class ADDONS_LIST_UL_items(UIList):
         wm = context.window_manager
 
         try:
-            item = scene.addons_list[index]
+            item = wm.addons_list[index]
         except IndexError:
             pass
         

@@ -56,16 +56,16 @@ class Addons_Helper_List_actions(Operator):
         idx = wm.addons_groups_list_index
 
         try:
-            item = scene.addons_groups_list[idx]
+            item = wm.addons_groups_list[idx]
         except IndexError:
             pass
         else:
-            if self.action == 'DOWN' and idx < len(scene.addons_groups_list) - 1:
-                scene.addons_groups_list.move(idx, idx+1)
+            if self.action == 'DOWN' and idx < len(wm.addons_groups_list) - 1:
+                wm.addons_groups_list.move(idx, idx+1)
                 wm.addons_groups_list_index += 1
 
             elif self.action == 'UP' and idx >= 1:
-                scene.addons_groups_list.move(idx, idx-1)
+                wm.addons_groups_list.move(idx, idx-1)
                 wm.addons_groups_list_index -= 1
                 
 
@@ -100,13 +100,13 @@ class Addons_Helper_List_actions_add(Operator):
         idx = wm.addons_groups_list_index
 
         try:
-            item = scene.addons_groups_list[idx]
+            item = wm.addons_groups_list[idx]
         except IndexError:
             pass
 
-        item = scene.addons_groups_list.add()
+        item = wm.addons_groups_list.add()
 
-        wm.addons_groups_list_index = len(scene.addons_groups_list) - 1
+        wm.addons_groups_list_index = len(wm.addons_groups_list) - 1
 
         return {"FINISHED"}       
 class Addons_Helper_List_actions_remove(Operator):
@@ -118,7 +118,8 @@ class Addons_Helper_List_actions_remove(Operator):
 
     @classmethod
     def poll(cls, context):
-        return bool(context.scene.addons_groups_list)
+        wm = context.window_manager
+        return bool(wm.addons_groups_list)
 
     def invoke(self, context, event):
         return context.window_manager.invoke_confirm(self, event)
@@ -134,7 +135,7 @@ class Addons_Helper_List_actions_remove(Operator):
         else:
             wm.addons_groups_list_index -= 1
         
-        scene.addons_groups_list.remove(idx)
+        wm.addons_groups_list.remove(idx)
 
         return {"FINISHED"}  
 class Addons_Helper_List_clearList(Operator):
@@ -146,14 +147,16 @@ class Addons_Helper_List_clearList(Operator):
 
     @classmethod
     def poll(cls, context):
-        return bool(context.scene.addons_groups_list)
+        wm = context.window_manager
+        return bool(wm.addons_groups_list)
 
     def invoke(self, context, event):
         return context.window_manager.invoke_confirm(self, event)
 
     def execute(self, context):
-        if bool(context.scene.addons_groups_list):
-            context.scene.addons_groups_list.clear()
+        wm = context.window_manager
+        if bool(wm.addons_groups_list):
+            wm.addons_groups_list.clear()
             self.report({'INFO'}, "All items removed")
         else:
             self.report({'INFO'}, "Nothing to remove")
@@ -164,7 +167,7 @@ def count_enabled_and_disabled(group_index):
     index = group_index
     item_is_disabled_count = 0
     item_is_enabled_count = 0
-    for i in bpy.context.scene.addons_list:
+    for i in bpy.context.window_manager.addons_list:
 
         module_name = find_addon_name(i.text, module_name=True)
         prefs = bpy.context.preferences
@@ -465,7 +468,7 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
 
             rows = 2
             wm = context.window_manager
-            main_column.template_list("ADDONS_LIST_UL_items", "", scene, "addons_list", wm, "addons_list_index", rows=rows)
+            main_column.template_list("ADDONS_LIST_UL_items", "", wm, "addons_list", wm, "addons_list_index", rows=rows)
 
             first_column.separator(factor = 9)
 
@@ -572,6 +575,7 @@ class Notes_List_Collection(PropertyGroup):
         "EDITMODE_HLT",
         "SEQUENCE",
         "QUIT",
+        "FILE_SCRIPT",
 
     ]
 
