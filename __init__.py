@@ -193,25 +193,25 @@ class Addons_Helper_Switch(Operator):
                     if group_index == item.index_from_group:
 
                         module_name = find_addon_name(item.text, module_name=True)
-                        
-                        prefs = context.preferences
-                        used_ext = {ext.module for ext in prefs.addons}
-                        
-                        is_enabled = module_name in used_ext
 
-                    
+                        if bool(module_name) == True:
+                        
+                            prefs = context.preferences
+                            used_ext = {ext.module for ext in prefs.addons}
+                            
+                            is_enabled = module_name in used_ext
 
                         
 
-                        if action == "ENABLE":
-                            if is_enabled == False:
-                                addon_utils.enable(
-                                module_name, default_set=1, persistent=0, handle_error=None)
-                        
-                        else:
-                            if is_enabled == True:
-                                addon_utils.disable(
-                                module_name, default_set=1,handle_error=None)
+                            if action == "ENABLE":
+                                if is_enabled == False:
+                                    addon_utils.enable(
+                                    module_name, default_set=1, persistent=0, handle_error=None)
+                            
+                            else:
+                                if is_enabled == True:
+                                    addon_utils.disable(
+                                    module_name, default_set=1,handle_error=None)
 
         else:
 
@@ -229,25 +229,27 @@ class Addons_Helper_Switch(Operator):
                 if item.index_from_group == self.group_index:
                     
                     module_name = find_addon_name(item.text, module_name=True)
+
+                    if bool(module_name) == True:
                     
-                    prefs = context.preferences
-                    used_ext = {ext.module for ext in prefs.addons}
+                        prefs = context.preferences
+                        used_ext = {ext.module for ext in prefs.addons}
+                        
+                        is_enabled = module_name in used_ext
+
                     
-                    is_enabled = module_name in used_ext
-
-                
 
 
 
-                    if action == "ENABLE":
-                        if is_enabled == False:
-                            addon_utils.enable(
-                            module_name, default_set=1, persistent=0, handle_error=None)
-                    
-                    else:
-                        if is_enabled == True:
-                            addon_utils.disable(
-                            module_name, default_set=1,handle_error=None)
+                        if action == "ENABLE":
+                            if is_enabled == False:
+                                addon_utils.enable(
+                                module_name, default_set=1, persistent=0, handle_error=None)
+                        
+                        else:
+                            if is_enabled == True:
+                                addon_utils.disable(
+                                module_name, default_set=1,handle_error=None)
 
 
 
