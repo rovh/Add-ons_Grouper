@@ -64,9 +64,46 @@ class Addons_Helper_List_actions(Operator):
                 wm.addons_groups_list.move(idx, idx+1)
                 wm.addons_groups_list_index += 1
 
+
+                for element in wm.addons_list:
+
+                    if element.index_from_group == idx:
+                        element.index_from_group = -1
+
+                    elif element.index_from_group == idx + 1:
+                        element.index_from_group = -2
+
+
+                for element in wm.addons_list:
+                    if element.index_from_group == -1:
+                        element.index_from_group = idx + 1
+
+                    elif element.index_from_group == -2:
+                        element.index_from_group = idx
+
+
+
+
             elif self.action == 'UP' and idx >= 1:
                 wm.addons_groups_list.move(idx, idx-1)
                 wm.addons_groups_list_index -= 1
+
+
+                for element in wm.addons_list:
+
+                    if element.index_from_group == idx:
+                        element.index_from_group = -1
+
+                    elif element.index_from_group == idx - 1:
+                        element.index_from_group = -2
+
+
+                for element in wm.addons_list:
+                    if element.index_from_group == -1:
+                        element.index_from_group = idx - 1
+
+                    elif element.index_from_group == -2:
+                        element.index_from_group = idx
                 
 
         return {"FINISHED"}
