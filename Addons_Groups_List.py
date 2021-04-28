@@ -204,18 +204,22 @@ def count_enabled_and_disabled(group_index):
     index = group_index
     item_is_disabled_count = 0
     item_is_enabled_count = 0
+
     for i in bpy.context.window_manager.addons_list:
 
         module_name = find_addon_name(i.text, module_name=True)
-        prefs = bpy.context.preferences
-        used_ext = {ext.module for ext in prefs.addons}
-        item_is_enabled = module_name in used_ext
 
-        if item_is_enabled == True and i.index_from_group == index:
-            item_is_enabled_count += 1
+        if bool(module_name):
 
-        if item_is_enabled == False and i.index_from_group == index:
-            item_is_disabled_count += 1
+            prefs = bpy.context.preferences
+            used_ext = {ext.module for ext in prefs.addons}
+            item_is_enabled = module_name in used_ext
+
+            if item_is_enabled == True and i.index_from_group == index:
+                item_is_enabled_count += 1
+
+            if item_is_enabled == False and i.index_from_group == index:
+                item_is_disabled_count += 1
 
     return item_is_enabled_count, item_is_disabled_count
 
@@ -380,6 +384,7 @@ class ADDONS_GROUPER_LIST_UL_items(UIList):
                 depress = True if item.auto_disable == True else False
                 row.operator("addons_helper.auto_enable_disable_list", icon="CHECKBOX_DEHLT", text = "", depress = depress).group_index__and__action = str(index) + "_" + "disable"
                 row.alignment = "LEFT"
+
 
                 row = main_row.row(align = 0)
 
