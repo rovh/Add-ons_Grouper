@@ -30,6 +30,8 @@ import bpy
 import addon_utils
 import pickle
 from bpy.app.handlers import persistent
+import os
+import pathlib
 
 from bpy.types import (
     Operator,
@@ -261,16 +263,17 @@ class Addons_Grouper_Pickle(Operator):
     def execute(self, context):
 
         wm = context.window_manager
+
+        file_folder_path_absolute = pathlib.Path(__file__).parent.absolute()
+        
         
         # [   [('symbols', 0), ('name', '1111')],    [], [('name', '1111'), ('symbols', 3)]]
 
         if self.action == "IMPORT":
 
             
-
-
-
-            with open('saved_data_Addons_Groups_List.pickle', 'rb') as f:
+            file_folder_path = os.path.join(file_folder_path_absolute, 'saved_data_Addons_Groups_List.pickle')
+            with open(file_folder_path, 'rb') as f:
                 data = pickle.load(f)
 
 
@@ -288,23 +291,22 @@ class Addons_Grouper_Pickle(Operator):
 
             for index, element in enumerate(data):
 
-                if element[0] == "auto_enable":
-                    pass
-                else:
+                for i in element:
 
-                    for i in element:
+                    name = i[0]
+                    value = i[1]
 
-                        name = i[0]
-                        value = i[1]
+                    wm.addons_groups_list[index][name] = value
 
-                        wm.addons_groups_list[index][name] = value
+                    # print(name, value)
 
-                        # print(name, value)
-
+                # wm.addons_groups_list[0]["auto_enable"].remove()
+                # wm.addons_groups_list[0]["auto_enable"].remove()
 
 
 
-            with open('saved_data_Addons_List.pickle', 'rb') as f:
+            file_folder_path = os.path.join(file_folder_path_absolute, 'saved_data_Addons_List.pickle')
+            with open(file_folder_path, 'rb') as f:
                 data = pickle.load(f)
 
             length_data = len(data)
@@ -342,7 +344,8 @@ class Addons_Grouper_Pickle(Operator):
                 data.append( i.items() )
             
 
-            with open('saved_data_Addons_Groups_List.pickle', 'wb') as f:
+            file_folder_path = os.path.join(file_folder_path_absolute, 'saved_data_Addons_Groups_List.pickle')
+            with open(file_folder_path, 'wb') as f:
                 pickle.dump(data, f)
 
 
@@ -351,7 +354,9 @@ class Addons_Grouper_Pickle(Operator):
             for i in wm.addons_list:
                 data.append( i.items() )
 
-            with open('saved_data_Addons_List.pickle', 'wb') as f:
+
+            file_folder_path = os.path.join(file_folder_path_absolute, 'saved_data_Addons_List.pickle')
+            with open(file_folder_path, 'wb') as f:
                 pickle.dump(data, f)
 
 
@@ -419,6 +424,9 @@ class Addons_Grouper_List_auto_enable_disable_list(Operator):
 
     def execute(self, context):
 
+        if bpy.data.scenes.find(custom_scene_name) == -1:
+            bpy.data.scenes.new(custom_scene_name)
+
         wm = context.window_manager
 
         keyword = "_"
@@ -455,11 +463,6 @@ class Addons_Grouper_List_auto_enable_disable_list(Operator):
 
         group_index = self.group_index
 
-
-
-
-        if bpy.data.scenes.find(custom_scene_name) == -1:
-            bpy.data.scenes.new(custom_scene_name)
 
 
         """auto_enable"""
@@ -627,14 +630,18 @@ def auto_enable_disable( reverse = False):
 @persistent
 def load_handler(dummy):
 
-    try:
-        bpy.ops.addons_grouper.pickle(action = "IMPORT")
-    except RuntimeError:
-        pass
+    # try:
+    #     bpy.ops.addons_grouper.pickle(action = "IMPORT")
+    # except RuntimeError:
+    #     pass
+
+    bpy.ops.addons_grouper.pickle(action = "IMPORT")
 
     auto_enable_disable(reverse = False)
+
+    # print(1111111111111111111111111)
         
-    bpy.app.handlers.load_post.remove(load_handler)
+    # bpy.app.handlers.load_post.remove(load_handler)
 
 # @persistent
 # def end_handler(dummy):
@@ -696,12 +703,12 @@ def unregister():
     # bpy.app.handlers.load_post.append(end_handler)
 
     
-    auto_enable_disable(reverse = True)
     bpy.ops.addons_grouper.pickle(action = "EXPORT")
+    auto_enable_disable(reverse = True)
     # bpy.ops.addons_grouper.switch(action = "DISABLE", auto_enable = True)
 
-    if load_handler in bpy.app.handlers.load_post:
-        bpy.app.handlers.load_post.remove(load_handler)
+    # if load_handler in bpy.app.handlers.load_post:
+    #     bpy.app.handlers.load_post.remove(load_handler)
     
     for blender_class in blender_classes:
         bpy.utils.unregister_class(blender_class)

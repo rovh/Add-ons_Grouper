@@ -24,7 +24,7 @@ from .Addons_List import *
 
 
 
-custom_scene_name = ".Addons_Groups_Data"
+custom_scene_name = ".Addons_Grouper_Data"
 
 
 class Addons_Groups_List_actions(Operator):
@@ -381,10 +381,15 @@ class ADDONS_GROUPS_LIST_UL_items(UIList):
                 row = main_row.row(align = 1)
                 # row.scale_x = 1.1
                 row.label(icon = "QUIT", text = "")
-                depress = True if item.auto_enable == True else False
+                if  bpy.data.scenes.find(custom_scene_name) != -1:
+                    depress = True if item.auto_enable == True and bool(bpy.data.scenes[custom_scene_name].auto_enable_list) == True else False
+                    depress_2 = True if item.auto_disable == True and bool(bpy.data.scenes[custom_scene_name].auto_disable_list) == True else False
+                else:
+                    depress = False
+                    depress_2 = False
+
                 row.operator("addons_grouper.auto_enable_disable_list", icon="CHECKMARK", text = "", depress = depress).group_index__and__action = str(index) + "_" + "enable"
-                depress = True if item.auto_disable == True else False
-                row.operator("addons_grouper.auto_enable_disable_list", icon="CHECKBOX_DEHLT", text = "", depress = depress).group_index__and__action = str(index) + "_" + "disable"
+                row.operator("addons_grouper.auto_enable_disable_list", icon="CHECKBOX_DEHLT", text = "", depress = depress_2).group_index__and__action = str(index) + "_" + "disable"
                 row.alignment = "LEFT"
 
 
