@@ -270,16 +270,42 @@ class ADDONS_GROUPS_LIST_UL_items(UIList):
         row_right = row.row(align = 1)
         # row_right.alignment = "CENTER"
 
+
+
+
         if index == wm.addons_groups_list_index:
-            row_left.operator("addons_list.list_move", icon= "NONE", text = " ", depress = 0).group_index = index
+            row_left.operator("addons_list.list_move", icon= "NONE", text = " ", depress = 0).group_index = index          
             row_center.operator("addons_list.list_move", icon=item.symbols, text = item.name, depress = depress).group_index = index
-            row_right.operator("addons_list.list_move", icon= "NONE", text = " ", depress = 0).group_index = index
+            # row_right.operator("addons_list.list_move", icon= "NONE", text = " ", depress = 0).group_index = index
+           
         else:
+            
             row_left.operator("addons_list.list_move", icon= "NONE", text = " ", depress = 0).group_index = index
             row_center.operator("addons_list.list_move", icon=item.symbols, text = item.name, depress = 0).group_index = index
-            row_right.operator("addons_list.list_move", icon= "NONE", text = " ", depress = 0).group_index = index
+            
+            
+
+        row_right.operator("addons_list.list_move", icon= "NONE", text = " ", depress = 0).group_index = index
 
         
+    
+        item_is_enabled_count, item_is_disabled_count = count_enabled_and_disabled(index)
+
+        if  bpy.data.scenes.find(custom_scene_name) != -1:
+            depress = True if item.auto_enable == True and bool(bpy.data.scenes[custom_scene_name].auto_enable_list) == True else False
+            depress_2 = True if item.auto_disable == True and bool(bpy.data.scenes[custom_scene_name].auto_disable_list) == True else False
+        else:
+            depress = False
+            depress_2 = False
+
+
+        op = row_right.operator("addons_grouper.auto_enable_disable_list", icon="CHECKMARK", text = "", depress = depress)
+        op.action = "enable"
+        op.group_index = index
+        
+        op = row_right.operator("addons_grouper.auto_enable_disable_list", icon="CHECKBOX_DEHLT", text = "", depress = depress_2)
+        op.action = "disable"
+        op.group_index = index
 
 
 
@@ -287,6 +313,7 @@ class ADDONS_GROUPS_LIST_UL_items(UIList):
 
         
         
+            # row_right.operator("addons_list.list_move", icon= "NONE", text = " ", depress = 0).group_index = index
         
 
 
@@ -381,12 +408,7 @@ class ADDONS_GROUPS_LIST_UL_items(UIList):
                 row = main_row.row(align = 1)
                 # row.scale_x = 1.1
                 row.label(icon = "QUIT", text = "")
-                if  bpy.data.scenes.find(custom_scene_name) != -1:
-                    depress = True if item.auto_enable == True and bool(bpy.data.scenes[custom_scene_name].auto_enable_list) == True else False
-                    depress_2 = True if item.auto_disable == True and bool(bpy.data.scenes[custom_scene_name].auto_disable_list) == True else False
-                else:
-                    depress = False
-                    depress_2 = False
+                
 
                 op = row.operator("addons_grouper.auto_enable_disable_list", icon="CHECKMARK", text = "", depress = depress)
                 op.action = "enable"

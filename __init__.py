@@ -63,6 +63,7 @@ class Addons_Grouper_Preferences (AddonPreferences):
 
     # bpy.types.Scene.addons_list = CollectionProperty(type=Addons_List_Collection)
 
+    auto_enable_disable: BoolProperty()
 
     def draw(self, context):
             
@@ -122,8 +123,19 @@ class Addons_Grouper_Preferences (AddonPreferences):
         #         action = "DISABLE" if reverse == False else "ENABLE"
 
 
-
-        col.operator("addons_grouper.switch_2", icon='FILE_REFRESH', text="")
+        row = col.row(align = 1)
+        row.operator("addons_grouper.switch_2", icon='FILE_REFRESH', text="")
+        row.scale_y = 2
+        row.alignment = "CENTER"
+        
+        col.separator(factor = 4)
+        # col.operator("addons_grouper.switch_2", icon='FILE_REFRESH', text="")
+        
+        row = col.row(align = 0)
+        row.prop(self, "auto_enable_disable", icon='QUIT', text="")
+        row.scale_x = .9
+        row.scale_y = .9
+        row.alignment = "CENTER"
 
         # row = layout.row()
         # col = row.column(align=True)
@@ -670,9 +682,8 @@ def load_handler(dummy):
 
     bpy.ops.addons_grouper.pickle(action = "IMPORT")
 
-    auto_enable_disable(reverse = False)
-
-    # print(1111111111111111111111111)
+    if bpy.context.preferences.addons[__name__].preferences.auto_enable_disable:
+        auto_enable_disable(reverse = False)
         
     bpy.app.handlers.load_post.remove(load_handler)
 
@@ -717,7 +728,7 @@ def register():
     bpy.types.WindowManager.addons_groups_list_index = IntProperty(name = "Add-on")
 
     bpy.types.WindowManager.addons_list = CollectionProperty(type=Addons_List_Collection)
-    bpy.types.WindowManager.addons_list_index = IntProperty(name = "Add-on")
+    bpy.types.WindowManager.addons_list_index = IntProperty(name = "Add-on", default = -1)
 
     # bpy.ops.addons_grouper.pickle('IMPORT', "INVOKE_DEFAULT")
     # bpy.ops.addons_grouper.pickle("INVOKE_DEFAULT")
@@ -742,7 +753,8 @@ def unregister():
 
     
     bpy.ops.addons_grouper.pickle(action = "EXPORT")
-    auto_enable_disable(reverse = True)
+    if bpy.context.preferences.addons[__name__].preferences.auto_enable_disable:
+        auto_enable_disable(reverse = True)
     # bpy.ops.addons_grouper.switch(action = "DISABLE", auto_enable = True)
 
     if load_handler in bpy.app.handlers.load_post:
