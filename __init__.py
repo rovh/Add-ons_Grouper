@@ -169,7 +169,8 @@ class Addons_Grouper_Switch(Operator):
 
         if self.auto_enable_disable == True:
 
-            if  bpy.data.scenes.find(custom_scene_name) != -1:
+            if  bpy.data.scenes.find(custom_scene_name) == -1:
+                bpy.data.scenes.new(custom_scene_name)
             
                 # auto_enable_list = bpy.data.scenes[custom_scene_name].auto_enable_list
                 # auto_disable_list = bpy.data.scenes[custom_scene_name].auto_disable_list
