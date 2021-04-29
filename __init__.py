@@ -123,10 +123,7 @@ class Addons_Grouper_Preferences (AddonPreferences):
 
 
 
-        # opr = col.operator("addons_grouper.switch", icon='FILE_REFRESH', text="")
-        # opr.auto_enable_disable = True
-        # opr.auto_enable_disable_list = auto_enable_list
-        # opr.action = "ENABLE"
+        col.operator("addons_grouper.switch_2", icon='FILE_REFRESH', text="")
 
         # row = layout.row()
         # col = row.column(align=True)
@@ -145,6 +142,22 @@ class Addons_Grouper_Open_Browser_Or_Folder(Operator):
     def execute(self, context):
 
         bpy.ops.wm.url_open(url = self.link )
+
+        return {"FINISHED"}
+
+class Addons_Grouper_Switch_2(Operator):
+    bl_idname = "addons_grouper.switch_2"
+    bl_label = "Refresh Auto enable/disable"
+    bl_description = 'Enable or Disable Group depending on "Auto enable/disable" option'
+    bl_options = {'REGISTER'}
+
+
+    def execute(self, context):
+
+        auto_enable_disable()
+
+        text = "Add-ons were refreshed"
+        self.report( {"INFO"}, text)
 
         return {"FINISHED"}
 
@@ -182,46 +195,46 @@ class Addons_Grouper_Switch(Operator):
                 # else:
                 #     return {"FINISHED"}
 
-                auto_list = self.auto_enable_disable_list
+            auto_list = self.auto_enable_disable_list
 
-                action = self.action
+            action = self.action
 
-                auto_list  = auto_list.split(".")
-                try:
-                    auto_list.pop(0)
-                    auto_list.pop(-1)
-                except IndexError:
-                    pass
+            auto_list  = auto_list.split(".")
+            try:
+                auto_list.pop(0)
+                auto_list.pop(-1)
+            except IndexError:
+                pass
 
 
-                for group_index in auto_list:
+            for group_index in auto_list:
 
-                    group_index = int(group_index)
+                group_index = int(group_index)
 
-                    for item in wm.addons_list:
+                for item in wm.addons_list:
 
-                        if group_index == item.index_from_group:
+                    if group_index == item.index_from_group:
 
-                            module_name = find_addon_name(item.text, module_name=True)
+                        module_name = find_addon_name(item.text, module_name=True)
 
-                            if bool(module_name) == True:
+                        if bool(module_name) == True:
+                        
+                            prefs = context.preferences
+                            used_ext = {ext.module for ext in prefs.addons}
                             
-                                prefs = context.preferences
-                                used_ext = {ext.module for ext in prefs.addons}
-                                
-                                is_enabled = module_name in used_ext
+                            is_enabled = module_name in used_ext
 
+                        
+
+                            if action == "ENABLE":
+                                if is_enabled == False:
+                                    addon_utils.enable(
+                                    module_name, default_set=1, persistent=0, handle_error=None)
                             
-
-                                if action == "ENABLE":
-                                    if is_enabled == False:
-                                        addon_utils.enable(
-                                        module_name, default_set=1, persistent=0, handle_error=None)
-                                
-                                else:
-                                    if is_enabled == True:
-                                        addon_utils.disable(
-                                        module_name, default_set=1,handle_error=None)
+                            else:
+                                if is_enabled == True:
+                                    addon_utils.disable(
+                                    module_name, default_set=1,handle_error=None)
 
         else:
                
@@ -414,10 +427,19 @@ def finding(sufix, place_name, enable):
         if len(bpy.data.scenes[custom_scene_name][x]) < 3:
             bpy.data.scenes[custom_scene_name][x] = ""
 
+def extra_draw(self, context):
+
+    layout = self.layout
+
+    layout.separator(factor = .7)
+    
+    layout.operator("addons_grouper.switch_2", icon='FILE_REFRESH', text="", emboss = 0)
+
+
 
 class Addons_Grouper_List_auto_enable_disable_list(Operator):
     bl_idname = "addons_grouper.auto_enable_disable_list"
-    bl_label = ""
+    bl_label = "Auto enable/disable"
     bl_description = ""
     bl_options = {'REGISTER'}
 
@@ -428,16 +450,14 @@ class Addons_Grouper_List_auto_enable_disable_list(Operator):
     @classmethod
     def description(cls, context, properties):
 
-        keyword = "_"
-        _, _, after_keyword = properties.group_index__and__action.partition(keyword)
-
-        if after_keyword == 'enable':
+        if  properties.action == 'enable':
             return "Enable add-ons from this group when you start Blender\
                     \nand disable when you close Blender"
 
-        elif after_keyword == 'disable':
+        elif properties.action  == 'disable':
             return "Disable add-ons from this group when you start Blender \
                     \nand enable when you close Blender"
+
 
 
     def execute(self, context):
@@ -529,10 +549,10 @@ class Addons_Grouper_List_auto_enable_disable_list(Operator):
         
 
 
-        print()
-        print()
-        print(bpy.data.scenes[custom_scene_name][x], y) 
-        print(bpy.data.scenes[custom_scene_name][x_2], y_2) 
+        # print()
+        # print()
+        # print(bpy.data.scenes[custom_scene_name][x], y) 
+        # print(bpy.data.scenes[custom_scene_name][x_2], y_2) 
 
         
 
@@ -638,6 +658,8 @@ def auto_enable_disable( reverse = False):
 
             bpy.ops.addons_grouper.switch(auto_enable_disable = True, action = action, auto_enable_disable_list = auto_disable_list)
 
+
+
 @persistent
 def load_handler(dummy):
 
@@ -672,6 +694,7 @@ blender_classes = [
     Addons_Grouper_Preferences,
     Addons_Grouper_Open_Browser_Or_Folder,
     Addons_Grouper_Switch,
+    Addons_Grouper_Switch_2,
     Addons_Grouper_Pickle,
     Addons_Grouper_List_auto_enable_disable_list,
 ]
@@ -701,12 +724,16 @@ def register():
 
     # pickle_action(action = "IMPORT")
 
+    bpy.types.TOPBAR_MT_editor_menus.append(extra_draw)
+
 
     bpy.app.handlers.load_post.append(load_handler)
 
     # bpy.ops.addons_grouper.pickle(action = "IMPORT")
 
 def unregister():
+
+    bpy.types.TOPBAR_MT_editor_menus.remove(extra_draw)
 
     # pickle_action(action = "EXPORT")
     # bpy.ops.addons_grouper.pickle('EXPORT', "INVOKE_DEFAULT")
