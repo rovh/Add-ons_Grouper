@@ -674,7 +674,7 @@ def load_handler(dummy):
 
     # print(1111111111111111111111111)
         
-    # bpy.app.handlers.load_post.remove(load_handler)
+    bpy.app.handlers.load_post.remove(load_handler)
 
 # @persistent
 # def end_handler(dummy):
@@ -745,8 +745,8 @@ def unregister():
     auto_enable_disable(reverse = True)
     # bpy.ops.addons_grouper.switch(action = "DISABLE", auto_enable = True)
 
-    # if load_handler in bpy.app.handlers.load_post:
-    #     bpy.app.handlers.load_post.remove(load_handler)
+    if load_handler in bpy.app.handlers.load_post:
+        bpy.app.handlers.load_post.remove(load_handler)
     
     for blender_class in blender_classes:
         bpy.utils.unregister_class(blender_class)
