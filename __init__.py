@@ -104,7 +104,30 @@ class Addons_Grouper_Preferences (AddonPreferences):
 
         col.separator(factor = 4)
 
-        col.operator("addons_grouper.pickle", icon='FILE_REFRESH', text="").action = "IMPORT"
+
+
+        # if  bpy.data.scenes.find(custom_scene_name) != -1:
+
+        #     reverse = False
+
+        #     auto_enable_list = bpy.data.scenes[custom_scene_name].auto_enable_list
+        #     auto_disable_list = bpy.data.scenes[custom_scene_name].auto_disable_list
+
+        #     if bool(auto_enable_list) == True:
+
+        #         action = "ENABLE" if reverse == False else "DISABLE"
+
+        #     if bool(auto_disable_list) == True:
+
+        #         action = "DISABLE" if reverse == False else "ENABLE"
+
+
+
+        # opr = col.operator("addons_grouper.switch", icon='FILE_REFRESH', text="")
+        # opr.auto_enable_disable = True
+        # opr.auto_enable_disable_list = auto_enable_list
+        # opr.action = "ENABLE"
+
         # row = layout.row()
         # col = row.column(align=True)
         # row = col.row(align=True)
@@ -132,8 +155,6 @@ class Addons_Grouper_Switch(Operator):
     bl_options = {'REGISTER'}
 
     group_index: IntProperty()
-
-    group_index__and__action: StringProperty()
 
     action: StringProperty()
 
@@ -202,14 +223,10 @@ class Addons_Grouper_Switch(Operator):
                                         module_name, default_set=1,handle_error=None)
 
         else:
+               
 
-            keyword = "_"
-
-            before_keyword, keyword, after_keyword = self.group_index__and__action.partition(keyword)
-                
-
-            self.group_index = int(before_keyword)
-            action = after_keyword
+            group_index = self.group_index
+            action = self.action
 
 
             for item in wm.addons_list:
@@ -405,7 +422,7 @@ class Addons_Grouper_List_auto_enable_disable_list(Operator):
 
     group_index: IntProperty()
 
-    group_index__and__action: StringProperty()
+    action: StringProperty()
 
     @classmethod
     def description(cls, context, properties):
@@ -428,14 +445,10 @@ class Addons_Grouper_List_auto_enable_disable_list(Operator):
             bpy.data.scenes.new(custom_scene_name)
 
         wm = context.window_manager
-
-        keyword = "_"
-
-        before_keyword, keyword, after_keyword = self.group_index__and__action.partition(keyword)
             
 
-        self.group_index = int(before_keyword)
-        action = after_keyword
+        group_index = self.group_index
+        action = self.action
 
 
 
@@ -461,10 +474,7 @@ class Addons_Grouper_List_auto_enable_disable_list(Operator):
 
 
 
-        group_index = self.group_index
-
-
-
+    
         """auto_enable"""
         try:
             wm.addons_groups_list[group_index][auto_enable]

@@ -388,21 +388,38 @@ class ADDONS_GROUPS_LIST_UL_items(UIList):
                     depress = False
                     depress_2 = False
 
-                row.operator("addons_grouper.auto_enable_disable_list", icon="CHECKMARK", text = "", depress = depress).group_index__and__action = str(index) + "_" + "enable"
-                row.operator("addons_grouper.auto_enable_disable_list", icon="CHECKBOX_DEHLT", text = "", depress = depress_2).group_index__and__action = str(index) + "_" + "disable"
+                op = row.operator("addons_grouper.auto_enable_disable_list", icon="CHECKMARK", text = "", depress = depress)
+                op.action = "enable"
+                op.group_index = index
+                
+                op = row.operator("addons_grouper.auto_enable_disable_list", icon="CHECKBOX_DEHLT", text = "", depress = depress_2)
+                op.action = "disable"
+                op.group_index = index
+                
+                
                 row.alignment = "LEFT"
 
 
                 row = main_row.row(align = 0)
 
                 if item_is_enabled_count == 0:
-                    row.operator("addons_grouper.switch", icon="CHECKMARK", text = "Enable All").group_index__and__action = str(index) + "_ENABLE"
+                    op = row.operator("addons_grouper.switch", icon="CHECKMARK", text = "Enable All")
+                    op.action = "ENABLE"
+                    op.group_index = index
+
                 elif item_is_disabled_count == 0:
-                    row.operator("addons_grouper.switch", icon="CHECKBOX_DEHLT", text = "Disable All").group_index__and__action = str(index) + "_DISABLE"
+                    op = row.operator("addons_grouper.switch", icon="CHECKBOX_DEHLT", text = "Disable All")
+                    op.action = "DISABLE"
+                    op.group_index = index
                 else:
-                    row.operator("addons_grouper.switch", icon="CHECKBOX_DEHLT", text = "Disable All").group_index__and__action = str(index) + "_DISABLE"
-                    row.operator("addons_grouper.switch", icon="CHECKMARK", text = "Enable All").group_index__and__action = str(index) + "_ENABLE"
-                
+                    op = row.operator("addons_grouper.switch", icon="CHECKBOX_DEHLT", text = "Disable All")
+                    op.action = "DISABLE"
+                    op.group_index = index
+                    
+                    op = row.operator("addons_grouper.switch", icon="CHECKMARK", text = "Enable All")
+                    op.action = "ENABLE"
+                    op.group_index = index
+
 
                 row.scale_x = .5
                 row.scale_y = 1.3
