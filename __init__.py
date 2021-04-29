@@ -107,22 +107,6 @@ class Addons_Grouper_Preferences (AddonPreferences):
 
 
 
-        # if  bpy.data.scenes.find(custom_scene_name) != -1:
-
-        #     reverse = False
-
-        #     auto_enable_list = bpy.data.scenes[custom_scene_name].auto_enable_list
-        #     auto_disable_list = bpy.data.scenes[custom_scene_name].auto_disable_list
-
-        #     if bool(auto_enable_list) == True:
-
-        #         action = "ENABLE" if reverse == False else "DISABLE"
-
-        #     if bool(auto_disable_list) == True:
-
-        #         action = "DISABLE" if reverse == False else "ENABLE"
-
-
         row = col.row(align = 1)
         row.operator("addons_grouper.switch_2", icon='FILE_REFRESH', text="")
         row.scale_y = 2
@@ -136,6 +120,9 @@ class Addons_Grouper_Preferences (AddonPreferences):
         row.scale_x = .9
         row.scale_y = .9
         row.alignment = "CENTER"
+
+
+        col.operator("addons_grouper.pop_up_menu", icon='INFO', text="")
 
         # row = layout.row()
         # col = row.column(align=True)
@@ -406,6 +393,63 @@ class Addons_Grouper_Pickle(Operator):
 
 
         return {"FINISHED"}  
+
+class Pop_Up_Operator(Operator):
+    bl_idname = "addons_grouper.pop_up_menu"
+    bl_label = "Tip Menu"
+
+    def execute(self, context):
+        return {'FINISHED'}
+
+    def draw(self, context):
+        layout = self.layout
+
+        col = layout.column(align = 1)
+
+        col.label(text = '''If you don't want changes to the enabled and disabled add-ons to be saved, you can enable''')
+        col.label(text = 'manual saving (Blender Preferences window >> bottom left corner >> "Save & Load" menu) >> "Auto-Save Preferences".' )
+        col.label(text = 'Then the changes will be saved only when the save button is clicked.')
+        col.separator(factor = 1.5)
+        col.label(text = 'But be careful: If you make changes in Blender Preferences, you may need to click "Save Preferences" button.')
+        col.label(text = '''If there are changes that need to be saved, an icon(*) will appear next to the button name.''')
+
+
+
+    def invoke(self, context, event): 
+        # preferences = bpy.context.preferences.addons[__name__].preferences
+        # height = bpy.context.window.height
+        # width = bpy.context.window.width
+
+
+        
+
+        # if location_cursor == True:
+            # return context.window_manager.invoke_props_dialog(self, width = width_menu)
+        # else:
+
+            # x = event.mouse_x
+            # y = event.mouse_y 
+
+            # location_x = width  * preferences.pop_up_menus_location_x
+            # location_y = height * preferences.pop_up_menus_location_y
+
+            # bpy.context.window.cursor_warp(location_x , location_y)
+
+
+        invoke = context.window_manager.invoke_props_dialog(self, width = 700)
+
+        # invoke = context.window_manager.invoke_props_dialog(self, width=width_menu)
+        # return context.window_manager.invoke_popup(self, width=700)
+        # return context.window_manager.invoke_popup(self)
+        # return context.window_manager.invoke_props_popup(self, event)
+        # return context.window_manager.invoke_confirm(self, event)
+
+
+        # bpy.context.window.cursor_warp(x , y)
+
+        return invoke
+
+
 
 
 def finding(sufix, place_name, enable):
@@ -708,6 +752,7 @@ blender_classes = [
     Addons_Grouper_Switch_2,
     Addons_Grouper_Pickle,
     Addons_Grouper_List_auto_enable_disable_list,
+    Pop_Up_Operator,
 ]
 
 blender_classes = \
