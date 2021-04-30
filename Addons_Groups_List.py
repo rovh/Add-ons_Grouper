@@ -312,11 +312,11 @@ class ADDONS_GROUPS_LIST_UL_items(UIList):
         if index != wm.addons_groups_list_index:
             
             first_column.separator(factor = 3)
-            pass
-
+        
         else:
-
-            
+    
+            if item.show == False:
+                first_column.separator(factor = 3)
 
             if item.show == True:
 
