@@ -57,7 +57,7 @@ class Addons_Grouper_Preferences (AddonPreferences):
 
     # bpy.context.preferences.addons[__name__].addons_groups_list = CollectionProperty(type=Notes_List_Collection)
 
-    # addons_groups_list: CollectionProperty(type=Notes_List_Collection)
+    # addons_groups_list: CollectionProperty(type=Addons_Groups_List_Collection)
 
     # t: IntProperty()
 
@@ -66,13 +66,28 @@ class Addons_Grouper_Preferences (AddonPreferences):
     auto_enable_disable: BoolProperty()
 
     def draw(self, context):
+        wm = context.window_manager
             
         layout = self.layout
-        # scene = bpy.context.scene
-        wm = context.window_manager
+
+        row = layout.row(align = 1)
+
+        row_left = row.row()
+        row_left.operator("addons_grouper.pickle", icon='FILE_REFRESH', text="").action = "IMPORT"
+        row_left.scale_x = 10
+        row_left.alignment = "LEFT"
+
+
+        row_right = row.row(align = 1)
+        row_right.operator("addons_grouper.switch_2", icon='CHECKBOX_HLT', text="")
+        # row_right.separator(factor = .5)
+        row_right.scale_x = 1.35
+        row_right.scale_y = 1.2
+        row_right.alignment = "RIGHT"
+        
 
         rows = 2
-        row = layout.row()
+        row = layout.row(align = 1)
         row.template_list("ADDONS_GROUPS_LIST_UL_items", "", wm, "addons_groups_list", wm, "addons_groups_list_index", rows=rows)
 
         col = row.column(align=True)
@@ -107,14 +122,13 @@ class Addons_Grouper_Preferences (AddonPreferences):
 
 
 
-        row = col.row(align = 1)
-        row.operator("addons_grouper.switch_2", icon='CHECKBOX_HLT', text="")
-        row.scale_y = 2
-        row.alignment = "CENTER"
+        # row = col.row(align = 1)
+        # row.operator("addons_grouper.switch_2", icon='CHECKBOX_HLT', text="")
+        # row.scale_y = 2
+        # row.alignment = "CENTER"
         
-        col.separator(factor = 4)
+        col.separator(factor = 2)
 
-        col.operator("addons_grouper.pickle", icon='FILE_REFRESH', text="").action = "IMPORT"
         
         row = col.row(align = 0)
         row.prop(self, "auto_enable_disable", icon='QUIT', text="")
@@ -123,7 +137,13 @@ class Addons_Grouper_Preferences (AddonPreferences):
         row.alignment = "CENTER"
 
 
-        col.operator("addons_grouper.pop_up_menu", icon='INFO', text="")
+
+
+        row = col.row(align = 0)
+        row.operator("addons_grouper.pop_up_menu", icon='INFO', text="")
+        row.scale_x = .9
+        row.scale_y = .9
+        row.alignment = "CENTER"
 
         # row = layout.row()
         # col = row.column(align=True)
@@ -281,8 +301,8 @@ class Addons_Grouper_Switch(Operator):
 
 class Addons_Grouper_Pickle(Operator):
     bl_idname = "addons_grouper.pickle"
-    bl_label = ""
-    bl_description = "Import or Export Data"
+    bl_label = "Refresh"
+    bl_description = "Refresh"
     bl_options = {'INTERNAL'}
 
     action: bpy.props.EnumProperty(
@@ -488,9 +508,15 @@ def extra_draw(self, context):
 
     layout = self.layout
 
-    layout.separator(factor = .7)
+    layout.separator(factor = .9)
+
+    row = layout.row(align = 1)
     
-    layout.operator("addons_grouper.switch_2", icon='FILE_REFRESH', text="", emboss = 0)
+    row.operator("addons_grouper.pickle", icon='FILE_REFRESH', text="", emboss = 0).action = "IMPORT"
+    
+    # row.separator(factor = .7)
+
+    row.operator("addons_grouper.switch_2", icon='CHECKBOX_HLT', text="", emboss = 0)
 
 
 
@@ -679,23 +705,6 @@ class Addons_Grouper_List_auto_enable_disable_list(Operator):
         return {"FINISHED"}
 
 
-# class Addons_Grouper_(Operator):
-#     """Move items up and down, add and remove"""
-#     bl_idname = "addons_grouper.open_browser_or_folder"
-#     bl_label = ""
-#     bl_description = "open browser or folder"
-#     bl_options = {'REGISTER'}
-
-#     link: StringProperty()
-
-#     def execute(self, context):
-
-#         bpy.ops.wm.url_open(url = self.link )
-
-#         return {"FINISHED"}
-
-# bpy.ops.addons_grouper.switch(auto_enable_disable = True, action = "ENABLE", auto_enable_disable_list = bpy.data.scenes['.Addons_Grouper_Data'].auto_enable_list)
-# bpy.ops.addons_grouper.switch(auto_enable_disable = True, action = "DISABLE", auto_enable_disable_list = bpy.data.scenes['.Addons_Grouper_Data'].auto_disable_list)
 
 def auto_enable_disable( reverse = False):
     if  bpy.data.scenes.find(custom_scene_name) != -1:
