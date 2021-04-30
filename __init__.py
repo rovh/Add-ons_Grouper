@@ -108,12 +108,13 @@ class Addons_Grouper_Preferences (AddonPreferences):
 
 
         row = col.row(align = 1)
-        row.operator("addons_grouper.switch_2", icon='FILE_REFRESH', text="")
+        row.operator("addons_grouper.switch_2", icon='CHECKBOX_HLT', text="")
         row.scale_y = 2
         row.alignment = "CENTER"
         
         col.separator(factor = 4)
-        # col.operator("addons_grouper.switch_2", icon='FILE_REFRESH', text="")
+
+        col.operator("addons_grouper.pickle", icon='FILE_REFRESH', text="").action = "IMPORT"
         
         row = col.row(align = 0)
         row.prop(self, "auto_enable_disable", icon='QUIT', text="")
