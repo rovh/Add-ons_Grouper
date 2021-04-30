@@ -166,14 +166,41 @@ class Addons_Groups_List_actions_remove(Operator):
 
         scene = context.scene
         wm = context.window_manager
+
         idx = wm.addons_groups_list_index
+       
+        
+
+        if idx < len(wm.addons_groups_list) - 1:
+
+            for element in wm.addons_list:
+
+                if element.index_from_group == idx:
+                    element.index_from_group = -1
+
+                elif element.index_from_group == idx + 1:
+                    element.index_from_group = -2
+
+
+            for element in wm.addons_list:
+                if element.index_from_group == -1:
+                    element.index_from_group = idx + 1
+
+                elif element.index_from_group == -2:
+                    element.index_from_group = idx
+
+
         
         if idx == 0:
             wm.addons_groups_list_index = 0
         else:
             wm.addons_groups_list_index -= 1
-        
+
         wm.addons_groups_list.remove(idx)
+
+        for element in wm.addons_list:
+            if element.index_from_group == idx:
+                wm.addons_list.remove(idx)
 
         return {"FINISHED"}  
 class Addons_Groups_List_clear(Operator):
@@ -249,8 +276,9 @@ class ADDONS_GROUPS_LIST_UL_items(UIList):
 
         row = first_row.row(align = 1)
         depress = True if index == wm.addons_groups_list_index and item.show == True else False
+        depress_2 = True if index == wm.addons_groups_list_index else False
         ico = "TRIA_RIGHT" if index == wm.addons_groups_list_index and item.show == True else "NONE"
-        row.operator("addons_list.list_move", icon= ico, text = tex, depress = depress).group_index = index
+        row.operator("addons_list.list_move", icon= ico, text = tex, depress = depress_2).group_index = index
         # row.alignment = "LEFT"
         # row.alignment = "CENTER"
         row.scale_x = .2

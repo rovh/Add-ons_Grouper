@@ -311,13 +311,26 @@ class Addons_Grouper_Pickle(Operator):
             ("IMPORT", "Import", ""),
             ))
 
+    condition: BoolProperty()
+
+    refresh: BoolProperty()
+
     def execute(self, context):
 
         wm = context.window_manager
 
+        # print(wm.addons_groups_list.items())
+
         file_folder_path_absolute = pathlib.Path(__file__).parent.absolute()
         
-        
+        if self.condition == True:
+            
+            if bool(wm.addons_groups_list) == False:
+                text = "Add-ons will be refreshed"
+                self.report( {"INFO"}, text)
+            else:
+                return {"FINISHED"} 
+
         # [   [('symbols', 0), ('name', '1111')],    [], [('name', '1111'), ('symbols', 3)]]
 
         if self.action == "IMPORT":
@@ -382,11 +395,6 @@ class Addons_Grouper_Pickle(Operator):
 
                     # print(name, value)
         
-
-
-
-
-
         elif self.action == "EXPORT":
 
 
@@ -411,7 +419,8 @@ class Addons_Grouper_Pickle(Operator):
                 pickle.dump(data, f)
 
 
-
+        if self.refresh == True:
+            bpy.ops.addons_list.list_move( group_index = wm.addons_groups_list_index)
 
         return {"FINISHED"}  
 
@@ -512,11 +521,12 @@ def extra_draw(self, context):
 
     row = layout.row(align = 1)
     
-    row.operator("addons_grouper.pickle", icon='FILE_REFRESH', text="", emboss = 0).action = "IMPORT"
-    
+    op = row.operator("addons_grouper.pickle", icon='CHECKBOX_HLT', text="", emboss = 0)
+    op.action = "IMPORT"
+    op.condition = True
     # row.separator(factor = .7)
 
-    row.operator("addons_grouper.switch_2", icon='CHECKBOX_HLT', text="", emboss = 0)
+    # row.operator("addons_grouper.switch_2", icon='CHECKBOX_HLT', text="", emboss = 0)
 
 
 
