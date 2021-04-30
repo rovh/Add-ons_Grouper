@@ -308,43 +308,15 @@ class ADDONS_GROUPS_LIST_UL_items(UIList):
         op.group_index = index
 
 
-
-
-
-        
-        
-            # row_right.operator("addons_list.list_move", icon= "NONE", text = " ", depress = 0).group_index = index
-        
-
-
-        # row = first_row.row()
-        # row.operator("addons_list.list_move", icon="UV_SYNC_SELECT", text = "").group_index = index
-        # row.scale_y = 1.5
-
-
-
-        # if index == scene.addons_groups_list_index:
-
-        #     # first_row.label(icon = "TRIA_RIGHT")
-        #     first_row.label(icon = "TRIA_DOWN")
-
-        #     first_row.label(text = item.name, icon = item.symbols)
-            
-        #     # first_row.label(icon = "TRIA_LEFT")
-        #     first_row.label(icon = "TRIA_DOWN")
-
-        # else:
-
-        #     first_row.label(text = item.name, icon = item.symbols)
-
-
-
         
         if index != wm.addons_groups_list_index:
             
-            first_column.separator(factor = 1.5)
+            first_column.separator(factor = 3)
+            pass
 
         else:
+
+            
 
             if item.show == True:
 
@@ -357,7 +329,7 @@ class ADDONS_GROUPS_LIST_UL_items(UIList):
                 main_box = main_box.box()
                 main_column = main_box.column(align = 1)
 
-
+                main_column.separator(factor = 3)
 
 
 
@@ -379,7 +351,7 @@ class ADDONS_GROUPS_LIST_UL_items(UIList):
 
 
 
-                main_column.separator(factor = 1.5)
+                # main_column.separator(factor = 1.5)
 
 
 
@@ -569,7 +541,7 @@ class ADDONS_GROUPS_LIST_UL_items(UIList):
                     first_column.separator(factor = 7)
                 
 
-            first_column.separator(factor = 2)
+            # first_column.separator(factor = 2)
 
 
 

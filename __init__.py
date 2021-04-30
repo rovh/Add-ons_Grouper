@@ -428,7 +428,7 @@ class Pop_Up_Operator(Operator):
         col = layout.column(align = 1)
 
         col.label(text = '''If you don't want changes to the enabled and disabled add-ons to be saved, you can enable''')
-        col.label(text = 'manual saving (Blender Preferences window >> bottom left corner >> "Save & Load" menu) >> "Auto-Save Preferences".' )
+        col.label(text = 'manual saving (Blender Preferences window >> bottom left corner >> "Save & Load" menu >> "Auto-Save Preferences").' )
         col.label(text = 'Then the changes will be saved only when the save button is clicked.')
         col.separator(factor = 1.5)
         col.label(text = 'But be careful: If you make changes in Blender Preferences, you may need to click "Save Preferences" button.')
