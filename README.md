@@ -5,6 +5,17 @@
 <img src="https://drive.google.com/uc?id=1JjQfx-LX8ZwAdMO1TFLLi0h15BH7VwlO" width=25% height=25% alt = "Video"/> 
 <p> Add-ons Grouper is an add-on created to simplify and extend the management of add-ons by creating add-ons groups and using additional options. </p>
 
+---
+
+Why do I need this extension?
+
+1. There are many reasons why a user should enable or disable some add-ons. For example:
+    * There are add-ons that add additional elements to the Blender UI and in certain situations interfere and clutter Blender UI.
+    * When there are too many add-ons, it can slow down the loading of Blender.
+2. It is much more convenient when extensions are grouped and you can understand what category certain extensions belong to.
+3. 
+
+
 
 ---
 
