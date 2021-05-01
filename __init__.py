@@ -167,6 +167,7 @@ class Addons_Grouper_Open_Browser_Or_Folder(Operator):
     def execute(self, context):
 
         bpy.ops.wm.url_open(url = self.link )
+        # bpy.ops.wm.url_open(url = "R" )
 
         return {"FINISHED"}
 
