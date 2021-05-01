@@ -222,6 +222,8 @@ class Addons_Groups_List_clear(Operator):
         wm = context.window_manager
         if bool(wm.addons_groups_list):
             wm.addons_groups_list.clear()
+            if bool(wm.addons_list):
+                wm.addons_list.clear()
             self.report({'INFO'}, "All items removed")
         else:
             self.report({'INFO'}, "Nothing to remove")

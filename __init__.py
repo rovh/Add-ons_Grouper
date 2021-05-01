@@ -142,8 +142,6 @@ class Addons_Grouper_Preferences (AddonPreferences):
         row.alignment = "CENTER"
 
 
-
-
         row = col.row(align = 0)
         row.operator("addons_grouper.pop_up_menu", icon='INFO', text="")
         row.scale_x = .9
