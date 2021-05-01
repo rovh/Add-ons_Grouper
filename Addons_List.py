@@ -427,8 +427,12 @@ class Addons_List_Collection(PropertyGroup):
 
     index_from_group: IntProperty()
 
-    addon_link: StringProperty()
-
+    addon_link: StringProperty(name = "Link",\
+        description = "This is a line for a link that can be opened in the browser.\
+            \nFor example, if you need to remember the site from which the add-on was downloaded and open it, this option will be very useful.\
+            \n\nIf you need to, you can insert the path to the file on your computer.\
+            ")
+            
     # name: StringProperty()
 
    

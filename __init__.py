@@ -158,8 +158,8 @@ class Addons_Grouper_Preferences (AddonPreferences):
 class Addons_Grouper_Open_Browser_Or_Folder(Operator):
     """Move items up and down, add and remove"""
     bl_idname = "addons_grouper.open_browser_or_folder"
-    bl_label = ""
-    bl_description = "open browser or folder"
+    bl_label = "Open link in browser or folder"
+    bl_description = "Open the link that is specified in the active(selected) add-on"
     bl_options = {'REGISTER'}
 
     link: StringProperty()
