@@ -174,6 +174,8 @@ class Addons_Grouper_Switch_2(Operator):
 
     def execute(self, context):
 
+        bpy.ops.addons_grouper.pickle(action='IMPORT', condition = True)
+
         auto_enable_disable()
 
         text = "Add-ons were refreshed"
@@ -521,9 +523,8 @@ def extra_draw(self, context):
 
     row = layout.row(align = 1)
     
-    op = row.operator("addons_grouper.pickle", icon='CHECKBOX_HLT', text="", emboss = 0)
-    op.action = "IMPORT"
-    op.condition = True
+    op = row.operator("addons_grouper.switch_2", icon='CHECKBOX_HLT', text="", emboss = 0)
+    
     # row.separator(factor = .7)
 
     # row.operator("addons_grouper.switch_2", icon='CHECKBOX_HLT', text="", emboss = 0)

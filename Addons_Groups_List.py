@@ -273,11 +273,37 @@ class ADDONS_GROUPS_LIST_UL_items(UIList):
         # split = first_row.split(factor = .05)
         # split.label(text = tex)
         # split.operator("addons_list.list_move", icon= "NONE", text = " ", depress = 0).group_index = index
-
-        row = first_row.row(align = 1)
+        item_is_enabled_count, item_is_disabled_count = count_enabled_and_disabled(index)
         depress = True if index == wm.addons_groups_list_index and item.show == True else False
         depress_2 = True if index == wm.addons_groups_list_index else False
-        ico = "TRIA_RIGHT" if index == wm.addons_groups_list_index and item.show == True else "NONE"
+
+
+        row = first_row.row(align = 1)
+
+
+        if item_is_enabled_count == 0 and item_is_disabled_count != 0:
+            # row = first_row.row(align = 1)
+            # row.label(icon = "CHECKBOX_DEHLT")
+            ic = "CHECKBOX_DEHLT"
+        elif item_is_enabled_count != 0 and item_is_disabled_count == 0:
+            # row = first_row.row(align = 1)
+            # row.label(icon = "CHECKMARK")
+            ic = "CHECKMARK"
+
+        else:
+            ic = "BLANK1"
+        
+
+
+        row.operator("addons_list.list_move", icon= ic, text = "", depress = 0, emboss = 1).group_index = index
+        row.scale_x = 1.1
+
+
+        row = first_row.row(align = 1)
+
+        
+        ico = "TRIA_DOWN" if index == wm.addons_groups_list_index and item.show == True else "NONE"
+        
         row.operator("addons_list.list_move", icon= ico, text = tex, depress = depress_2).group_index = index
         # row.alignment = "LEFT"
         # row.alignment = "CENTER"
