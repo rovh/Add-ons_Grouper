@@ -167,14 +167,26 @@ class Addons_Grouper_Open_Browser_Or_Folder(Operator):
 
 class Addons_Grouper_Switch_2(Operator):
     bl_idname = "addons_grouper.switch_2"
-    bl_label = "Refresh Auto enable/disable"
+    bl_label = ""
     bl_description = 'Enable or Disable Group depending on "Auto enable/disable" option'
     bl_options = {'REGISTER'}
+
+    use_refresh: BoolProperty()
+
+    @classmethod
+    def description(cls, context, properties):
+
+        if  properties.use_refresh == True:
+            return 'Refresh and Enable or Disable Group depending on "Auto enable/disable" option'
+        else:
+            return 'Enable or Disable Group depending on "Auto enable/disable" option'
 
 
     def execute(self, context):
 
-        bpy.ops.addons_grouper.pickle(action='IMPORT', condition = True)
+        if self.use_refresh == True:
+
+            bpy.ops.addons_grouper.pickle(action='IMPORT', condition = True)
 
         auto_enable_disable()
 
@@ -304,7 +316,7 @@ class Addons_Grouper_Switch(Operator):
 class Addons_Grouper_Pickle(Operator):
     bl_idname = "addons_grouper.pickle"
     bl_label = "Refresh"
-    bl_description = "Refresh"
+    bl_description = "If for some reason the created groups are not displayed, then this button should help"
     bl_options = {'INTERNAL'}
 
     action: bpy.props.EnumProperty(
@@ -524,7 +536,7 @@ def extra_draw(self, context):
     row = layout.row(align = 1)
     
     op = row.operator("addons_grouper.switch_2", icon='CHECKBOX_HLT', text="", emboss = 0)
-    
+    op.use_refresh = True
     # row.separator(factor = .7)
 
     # row.operator("addons_grouper.switch_2", icon='CHECKBOX_HLT', text="", emboss = 0)

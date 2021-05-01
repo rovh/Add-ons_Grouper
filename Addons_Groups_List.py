@@ -295,7 +295,7 @@ class ADDONS_GROUPS_LIST_UL_items(UIList):
         
 
 
-        row.operator("addons_list.list_move", icon= ic, text = "", depress = 0, emboss = 1).group_index = index
+        row.operator("addons_list.list_move", icon= ic, text = "", depress = 0, emboss = 0).group_index = index
         row.scale_x = 1.1
 
 
@@ -304,7 +304,7 @@ class ADDONS_GROUPS_LIST_UL_items(UIList):
         
         ico = "TRIA_DOWN" if index == wm.addons_groups_list_index and item.show == True else "NONE"
         
-        row.operator("addons_list.list_move", icon= ico, text = tex, depress = depress_2).group_index = index
+        row.operator("addons_list.list_move", icon= ico, text = tex, depress = depress_2, emboss = 1).group_index = index
         # row.alignment = "LEFT"
         # row.alignment = "CENTER"
         row.scale_x = .2
