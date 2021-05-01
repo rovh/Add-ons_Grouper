@@ -343,7 +343,7 @@ class ADDONS_LIST_UL_items(UIList):
 
                 
                 
-                main_row = layout.row()
+                main_row = layout.row(align = 1)
 
                 
                 # userpref = context.preferences
@@ -393,15 +393,23 @@ class ADDONS_LIST_UL_items(UIList):
 
                 row = main_row.row(align = 1)
                 addon_name = find_addon_name(item.text)
-                row.label(text =     "   "   +   str(index + 1)   +   ".   "   +   addon_name, icon = ico)
+                row.label(text =     "   "   +   str(index + 1)   +   "   "   +   addon_name, icon = ico)
                 row.alignment = "LEFT"
 
                 row = main_row.row(align = 1)
-                row.prop(item, "text", emboss=1, text = "")
+                row.prop(item, "text", emboss=1, text = "", icon = "NONE")
                 row.alignment = "RIGHT"
+                row.scale_x = .8
+
+
+                row = main_row.row(align = 1)
+                row.prop(item, "addon_link", emboss=1, text = "", icon = "NONE")
+                # row.alignment = "RIGHT"
+                row.scale_x = .17
+
 
                 if index == wm.addons_list_index:
-                    row.label(icon = "TRIA_LEFT", text = "")
+                    main_row.label(icon = "TRIA_LEFT", text = "")
 
 
                 # addons = [
@@ -418,6 +426,8 @@ class Addons_List_Collection(PropertyGroup):
     text: StringProperty( name = "Link to the Add-on")
 
     index_from_group: IntProperty()
+
+    addon_link: StringProperty()
 
     # name: StringProperty()
 

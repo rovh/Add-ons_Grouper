@@ -63,7 +63,12 @@ class Addons_Grouper_Preferences (AddonPreferences):
 
     # bpy.types.Scene.addons_list = CollectionProperty(type=Addons_List_Collection)
 
-    auto_enable_disable: BoolProperty()
+    auto_enable_disable: BoolProperty(name = "Auto enable/disable on Blender start", description = \
+        """This parameter is responsible for automatically enabling add-ons with selected "Auto enable/disable" option.\
+        \nFor example, if you open a .blend file, the add-ons with marked "Auto enable/disable" option will be enabled/disabled with Blender start.\
+        \nAttention: this function only works if you open .blend file directly, if you do not open it directly*, then "Auto enable/disable on Blender start" will not work.\
+        \n * This means that you do not first open Blender and then create or open the desired file, but select it directly.
+        """)
 
     def draw(self, context):
         wm = context.window_manager
@@ -440,7 +445,8 @@ class Addons_Grouper_Pickle(Operator):
 
 class Pop_Up_Operator(Operator):
     bl_idname = "addons_grouper.pop_up_menu"
-    bl_label = "Tip Menu"
+    bl_label = ""
+    bl_description = "Tip Menu"
 
     def execute(self, context):
         return {'FINISHED'}

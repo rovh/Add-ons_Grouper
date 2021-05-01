@@ -573,8 +573,11 @@ class ADDONS_GROUPS_LIST_UL_items(UIList):
                 row_right.alignment = "RIGHT"
 
 
-                row_right.operator("addons_list.find", icon="VIEWZOOM", text = "")
+                row_right.operator("addons_grouper.open_browser_or_folder", icon="URL", text = "").link = wm.addons_list[wm.addons_list_index].addon_link
 
+                row_right.separator(factor = 1)
+
+                row_right.operator("addons_list.find", icon="VIEWZOOM", text = "")
 
                 row_right.separator(factor = 1)
                 
@@ -660,17 +663,12 @@ class ADDONS_GROUPS_LIST_UL_items(UIList):
             # column_main.separator(factor=1.1)
 
 class Addons_Groups_List_Collection(PropertyGroup):
-
-
-    # addons_list: CollectionProperty(type=Addons_List_Collection)
     
     show: BoolProperty()
 
     show_parameters: BoolProperty(name = "Show Parameters for this Group")
 
     text: StringProperty()
-
-    addon_link: StringProperty()
 
     ico_name: StringProperty(default = "BLANK1")
 
