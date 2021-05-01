@@ -575,7 +575,7 @@ class ADDONS_GROUPS_LIST_UL_items(UIList):
                 row_right.alignment = "RIGHT"
 
 
-                row_right.operator("addons_grouper.open_browser_or_folder", icon="URL", text = "").link = wm.addons_list[wm.addons_list_index].addon_link
+                row_right.operator("addons_grouper.open_browser_or_folder", icon="URL", text = "")
 
                 row_right.separator(factor = 1)
 

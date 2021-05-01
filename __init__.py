@@ -160,11 +160,23 @@ class Addons_Grouper_Open_Browser_Or_Folder(Operator):
     bl_description = "Open the link that is specified in the active(selected) add-on"
     bl_options = {'REGISTER'}
 
-    link: StringProperty()
+    # link: StringProperty()
+
+    @classmethod
+    def poll(cls, context):
+        wm = context.window_manager
+        return bool(wm.addons_list)
 
     def execute(self, context):
 
-        bpy.ops.wm.url_open(url = self.link )
+        wm = context.window_manager
+
+        try:
+            link = wm.addons_list[wm.addons_list_index].addon_link
+        except IndexError:
+            pass
+        else:
+            bpy.ops.wm.url_open(url = link )
         # bpy.ops.wm.url_open(url = "R" )
 
         return {"FINISHED"}
@@ -811,7 +823,7 @@ def register():
     bpy.types.WindowManager.addons_groups_list_index = IntProperty(name = "Add-on")
 
     bpy.types.WindowManager.addons_list = CollectionProperty(type=Addons_List_Collection)
-    bpy.types.WindowManager.addons_list_index = IntProperty(name = "Add-on", default = -1)
+    bpy.types.WindowManager.addons_list_index = IntProperty(name = "Add-on")
 
     # bpy.ops.addons_grouper.pickle('IMPORT', "INVOKE_DEFAULT")
     # bpy.ops.addons_grouper.pickle("INVOKE_DEFAULT")
