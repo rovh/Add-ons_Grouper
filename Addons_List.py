@@ -69,6 +69,13 @@ class Addons_List_actions(Operator):
             ))
 
     @classmethod
+    def poll(cls, context):
+        wm = context.window_manager
+        idx = wm.addons_list_index
+
+        return bool(wm.addons_list) and wm.addons_list[idx].index_from_group == wm.addons_groups_list_index
+
+    @classmethod
     def description(cls, context, properties):
         if properties.action == 'UP':
             return "Up\
@@ -188,7 +195,8 @@ class Addons_List_actions_add(Operator):
 
         item = wm.addons_list.add()
 
-        # scene.addons_list_index = len(scene.addons_list) - 1
+        
+
 
         item.index_from_group = self.group_index
 
@@ -196,7 +204,8 @@ class Addons_List_actions_add(Operator):
 
         # bpy.ops.addons_list.list_move(index_from_add_action = True)
 
-        bpy.ops.addons_list.list_move(group_index = self.group_index, index_from_add_action = True, use_show = False)
+        bpy.ops.addons_list.list_move(group_index = self.group_index, index_from_add_action = 1, use_show = False)
+        # wm.addons_list_index = list(wm.addons_list).index(item)
         
         
 
@@ -213,7 +222,9 @@ class Addons_List_actions_remove(Operator):
     @classmethod
     def poll(cls, context):
         wm = context.window_manager
-        return bool(wm.addons_list)
+        idx = wm.addons_list_index
+
+        return bool(wm.addons_list) and wm.addons_list[idx].index_from_group == wm.addons_groups_list_index
                 
 
     def invoke(self, context, event):
@@ -253,6 +264,15 @@ class Addons_List_find(Operator):
     module_name: StringProperty
 
 
+    @classmethod
+    def poll(cls, context):
+        wm = context.window_manager
+        idx = wm.addons_list_index
+
+        return bool(wm.addons_list) and wm.addons_list[idx].index_from_group == wm.addons_groups_list_index
+
+
+
     def execute(self, context):
     
 
@@ -265,10 +285,13 @@ class Addons_List_find(Operator):
         except IndexError:
             pass
 
-        
-        module_name = find_addon_name(item.text, module_name = True)
 
-        bpy.ops.preferences.addon_show(module = module_name)
+        # idx = wm.addons_list_index
+        if wm.addons_list[idx].index_from_group == self.group_index:
+
+            module_name = find_addon_name(item.text, module_name = True)
+
+            bpy.ops.preferences.addon_show(module = module_name)
 
         return {"FINISHED"}  
 

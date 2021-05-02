@@ -162,10 +162,14 @@ class Addons_Grouper_Open_Browser_Or_Folder(Operator):
 
     # link: StringProperty()
 
+    group_index: IntProperty()
+
     @classmethod
     def poll(cls, context):
         wm = context.window_manager
-        return bool(wm.addons_list)
+        idx = wm.addons_list_index
+
+        return bool(wm.addons_list) and wm.addons_list[idx].index_from_group == wm.addons_groups_list_index
 
     def execute(self, context):
 
@@ -177,7 +181,6 @@ class Addons_Grouper_Open_Browser_Or_Folder(Operator):
             pass
         else:
             bpy.ops.wm.url_open(url = link )
-        # bpy.ops.wm.url_open(url = "R" )
 
         return {"FINISHED"}
 
