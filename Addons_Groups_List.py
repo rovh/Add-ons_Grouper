@@ -42,6 +42,12 @@ class Addons_Groups_List_actions(Operator):
             # ('ADD', "Add", "") 
             ))
 
+
+    @classmethod
+    def poll(cls, context):
+        wm = context.window_manager
+        return len(wm.addons_groups_list) > 1
+
     @classmethod
     def description(cls, context, properties):
         if properties.action == 'UP':
