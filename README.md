@@ -53,7 +53,7 @@ Contents:
 
 ## <a name="advanced_operations_2">Advanced operations: Auto enable/disable option</a>
 
-<a href="https://drive.google.com/file/d/1RhE3c2v5PimIsyQAtwFrXwpxKkMyiU7t/preview" target="_self">
+<a href="https://drive.google.com/file/d/1vxU4ZVFQPxVKSubuj49ynIVFaE5nSnOC/preview" target="_self">
 <img src="https://drive.google.com/uc?id=17wFAB06tOufBW0XnuSl4WkQ7WQ475vpq" width=50% height=50% alt = "Video" style="border-radius: 30px">
 </a>
 
