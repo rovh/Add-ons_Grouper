@@ -73,7 +73,14 @@ class Addons_List_actions(Operator):
         wm = context.window_manager
         idx = wm.addons_list_index
 
-        return bool(wm.addons_list) and wm.addons_list[idx].index_from_group == wm.addons_groups_list_index
+        if bool(wm.addons_list) == True:
+            try:
+                return wm.addons_list[idx].index_from_group == wm.addons_groups_list_index 
+            except IndexError:
+                pass
+        else:
+            return False
+
 
     @classmethod
     def description(cls, context, properties):
@@ -224,7 +231,14 @@ class Addons_List_actions_remove(Operator):
         wm = context.window_manager
         idx = wm.addons_list_index
 
-        return bool(wm.addons_list) and wm.addons_list[idx].index_from_group == wm.addons_groups_list_index
+        if bool(wm.addons_list) == True:
+            try:
+                return wm.addons_list[idx].index_from_group == wm.addons_groups_list_index 
+            except IndexError:
+                pass
+        else:
+            return False
+
                 
 
     def invoke(self, context, event):
@@ -269,8 +283,13 @@ class Addons_List_find(Operator):
         wm = context.window_manager
         idx = wm.addons_list_index
 
-        return bool(wm.addons_list) and wm.addons_list[idx].index_from_group == wm.addons_groups_list_index
-
+        if bool(wm.addons_list) == True:
+            try:
+                return wm.addons_list[idx].index_from_group == wm.addons_groups_list_index 
+            except IndexError:
+                pass
+        else:
+            return False
 
 
     def execute(self, context):

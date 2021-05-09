@@ -169,8 +169,15 @@ class Addons_Grouper_Open_Browser_Or_Folder(Operator):
         wm = context.window_manager
         idx = wm.addons_list_index
 
-        return bool(wm.addons_list) and wm.addons_list[idx].index_from_group == wm.addons_groups_list_index
+        if bool(wm.addons_list) == True:
+            try:
+                return wm.addons_list[idx].index_from_group == wm.addons_groups_list_index 
+            except IndexError:
+                pass
+        else:
+            return False
 
+            
     def execute(self, context):
 
         wm = context.window_manager
