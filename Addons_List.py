@@ -275,8 +275,7 @@ class Addons_List_find(Operator):
     bl_description = "Find selected add-on in Blender Search"
     bl_options = {'INTERNAL'}
 
-    module_name: StringProperty
-
+    # module_name: StringProperty
 
     @classmethod
     def poll(cls, context):
@@ -306,11 +305,11 @@ class Addons_List_find(Operator):
 
 
         # idx = wm.addons_list_index
-        if wm.addons_list[idx].index_from_group == self.group_index:
+        # if wm.addons_list[idx].index_from_group == self.group_index:
 
-            module_name = find_addon_name(item.text, module_name = True)
+        module_name = find_addon_name(item.text, module_name = True)
 
-            bpy.ops.preferences.addon_show(module = module_name)
+        bpy.ops.preferences.addon_show(module = module_name)
 
         return {"FINISHED"}  
 
