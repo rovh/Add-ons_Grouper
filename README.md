@@ -21,7 +21,7 @@ Contents:
 
 * <a href="#introduction">Introduction Video</a>
 * <a href="#basic_operations">Basic operations</a>
-* <a href="#advanced_operations">Advanced operations: Open link in browser or folder</a>
+* <a href="#advanced_operations">Advanced operations: Open link in browser or folder and find the add-on</a>
 * <a href="#advanced_operations_2">Advanced operations 2: Auto enable/disable option</a>
 
 ---
@@ -43,9 +43,9 @@ Contents:
 
 ---
 
-## <a name="advanced_operations">Advanced operations: Open link in browser or folder</a>
+## <a name="advanced_operations">Advanced operations: Open link in browser or folder and find the add-on</a>
 
-<a href="https://drive.google.com/file/d/1RhE3c2v5PimIsyQAtwFrXwpxKkMyiU7t/preview" target="_self">
+<a href="https://drive.google.com/file/d/1KYfim8iCxCjH79ErDB6nW4ffIKfZruhT/preview" target="_self">
 <img src="https://drive.google.com/uc?id=17wFAB06tOufBW0XnuSl4WkQ7WQ475vpq" width=50% height=50% alt = "Video" style="border-radius: 30px">
 </a>
 
