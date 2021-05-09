@@ -30,7 +30,7 @@ Contents:
 ## <a name="introduction">Introduction Video</a>
 
 <a href="https://drive.google.com/file/d/1RhE3c2v5PimIsyQAtwFrXwpxKkMyiU7t/preview" target="_self">
-<img src="https://drive.google.com/uc?id=17wFAB06tOufBW0XnuSl4WkQ7WQ475vpq" width=50% height=50% alt = "Video" style="border-radius: 30px">
+<img src="https://drive.google.com/uc?id=17wFAB06tOufBW0XnuSl4WkQ7WQ475vpq" width=40% height=40% alt = "Video" style="border-radius: 30px">
 </a>
 
 ---
@@ -38,15 +38,15 @@ Contents:
 ## <a name="basic_operations">Basic operations</a>
 
 <a href="https://drive.google.com/file/d/195qmy4mNF1we-1GPPoOrQfC4Dvu0ogOL/preview" target="_self">
-<img src="https://drive.google.com/uc?id=17wFAB06tOufBW0XnuSl4WkQ7WQ475vpq" width=50% height=50% alt = "Video" style="border-radius: 30px">
+<img src="https://drive.google.com/uc?id=17wFAB06tOufBW0XnuSl4WkQ7WQ475vpq" width=40% height=40% alt = "Video" style="border-radius: 30px">
 </a>
 
 ---
 
 ## <a name="advanced_operations">Advanced operations: Open link in browser or folder and find the add-on</a>
 
-<a href="https://drive.google.com/file/d/1KYfim8iCxCjH79ErDB6nW4ffIKfZruhT/preview" target="_self">
-<img src="https://drive.google.com/uc?id=17wFAB06tOufBW0XnuSl4WkQ7WQ475vpq" width=50% height=50% alt = "Video" style="border-radius: 30px">
+<a href="https://drive.google.com/file/d/1L4GTgQPFgg6uIFOJfzpLYBR7Jsb0vwEQ/preview" target="_self">
+<img src="https://drive.google.com/uc?id=17wFAB06tOufBW0XnuSl4WkQ7WQ475vpq" width=40% height=40% alt = "Video" style="border-radius: 30px">
 </a>
 
 ---
@@ -54,7 +54,7 @@ Contents:
 ## <a name="advanced_operations_2">Advanced operations: Auto enable/disable option</a>
 
 <a href="https://drive.google.com/file/d/1vxU4ZVFQPxVKSubuj49ynIVFaE5nSnOC/preview" target="_self">
-<img src="https://drive.google.com/uc?id=17wFAB06tOufBW0XnuSl4WkQ7WQ475vpq" width=50% height=50% alt = "Video" style="border-radius: 30px">
+<img src="https://drive.google.com/uc?id=17wFAB06tOufBW0XnuSl4WkQ7WQ475vpq" width=40% height=40% alt = "Video" style="border-radius: 30px">
 </a>
 
 ---
